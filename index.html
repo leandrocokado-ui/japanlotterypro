@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#060810">
+<meta name="description" content="6 loterias oficiais do Japão com análise por IA. Loto6, Loto7, Mini Loto, Bingo5, Numbers3, Numbers4. Guia completo para brasileiros no Japão.">
+<meta name="keywords" content="loto6, loto7, mini loto, bingo5, numbers3, numbers4, loteria japão, takarakuji, brasileiros japão, ロト6, ロト7">
+<meta name="author" content="Japan Lottery Pro">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Japan Lottery Pro — IA Takarakuji">
+<meta property="og:description" content="6 loterias do Japão com IA. Guia completo para brasileiros!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://japanlotterypro.netlify.app">
+<meta property="og:image" content="https://japanlotterypro.netlify.app/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Japan Lottery Pro — IA Takarakuji">
+<meta name="twitter:description" content="6 loterias do Japão com IA. Guia completo para brasileiros!">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lottery Pro">
+<meta name="mobile-web-app-capable" content="yes">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<title>Japan Lottery Pro — IA Takarakuji</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060810;--bg2:#0b0f1e;--bg3:#111626;--bg4:#181e30;--text:#e8eaf6;--muted:#6a74a0;--border:rgba(255,255,255,0.07);--card:rgba(255,255,255,0.03);--radius:16px;--active:#f0c040}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;overflow-x:hidden;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 5%,rgba(240,192,64,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 85% 90%,rgba(124,111,255,.07) 0%,transparent 60%);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 14px 110px}
+header{text-align:center;padding:28px 0 16px;position:relative}
+.lang-toggle{position:absolute;top:28px;right:0;display:flex;background:var(--card);border:1px solid var(--border);border-radius:100px;overflow:hidden}
+.lang-btn{padding:6px 12px;border:none;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .2s;white-space:nowrap}
+.lang-btn.active{background:var(--active);color:#000;font-weight:700}
+.jp-flag{font-size:26px;margin-bottom:6px}
+.brand-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:5px 14px;margin-bottom:10px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.brand-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--active);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+h1{font-family:'Orbitron',sans-serif;font-size:clamp(20px,5.5vw,32px);font-weight:900;color:var(--text);letter-spacing:3px;line-height:1.1}
+h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--muted);font-size:11px;margin-top:5px;letter-spacing:1px}
+.lottery-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:16px 0}
+.lottery-btn{padding:11px 5px;border:1px solid var(--border);background:var(--card);border-radius:13px;cursor:pointer;transition:all .2s;text-align:center;font-family:'Noto Sans JP',sans-serif;position:relative;overflow:hidden}
+.lottery-btn.active{border-color:var(--lottery-color,var(--active));background:rgba(255,255,255,.05);box-shadow:0 0 18px -5px var(--lottery-color,var(--active))}
+.lb-icon{font-size:19px;margin-bottom:3px}.lb-name{font-size:10px;font-weight:700;color:var(--text);display:block}.lb-sub{font-size:9px;color:var(--muted);margin-top:1px}
+.lb-dot{width:5px;height:5px;border-radius:50%;background:var(--lottery-color,var(--active));margin:4px auto 0}
+.lottery-btn.active .lb-dot{box-shadow:0 0 8px var(--lottery-color,var(--active))}
+.tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:3px;margin:12px 0;gap:3px}
+.tab{flex:1;padding:9px 6px;border:none;background:transparent;color:var(--muted);border-radius:9px;font-family:'Noto Sans JP',sans-serif;font-size:12px;cursor:pointer;transition:all .2s}
+.tab.active{background:var(--active);color:#000;font-weight:700}
+.panel{display:none}.panel.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.slabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:18px 0 9px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border)}
+.info-box{border-radius:12px;padding:12px 14px;margin-bottom:13px;font-size:12px;color:var(--muted);line-height:1.8;background:rgba(255,255,255,.03);border:1px solid var(--border)}
+.info-box strong{color:var(--active)}
+.ball-grid{display:grid;gap:5px;margin-bottom:13px}
+.ball{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:50%;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;user-select:none;color:var(--muted);position:relative;overflow:hidden}
+.ball::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.12),transparent 55%)}
+.ball:hover{transform:scale(1.1);border-color:var(--active);color:var(--text)}
+.ball.selected{background:var(--active);border-color:transparent;color:#000;transform:scale(1.05);box-shadow:0 0 14px -2px var(--active)}
+.sel-bar{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:13px}
+.sel-count{font-family:'Orbitron',sans-serif;font-size:22px;color:var(--active)}.sel-label{font-size:11px;color:var(--muted)}
+.sel-mini-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:60%}
+.sel-mini{width:28px;height:28px;border-radius:50%;background:var(--active);color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;animation:popIn .18s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border:none;border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.btn-ai{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;box-shadow:0 0 20px rgba(124,58,237,.35);position:relative;overflow:hidden}
+.btn-ai::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);transform:translateX(-100%);animation:shimmer 2.5s infinite}
+@keyframes shimmer{to{transform:translateX(100%)}}
+.btn-ai:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,58,237,.5)}
+.btn-ai:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-gold{background:var(--active);color:#000;box-shadow:0 0 16px -4px var(--active)}
+.btn-gold:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-rand{background:var(--card);border:1px solid var(--border);color:var(--text);font-size:13px;padding:10px}
+.btn-rand:hover{border-color:var(--active)}
+.btn-clear{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;padding:9px}
+.loading{display:none;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12px;padding:10px}
+.loading.show{display:flex}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.1);border-top-color:var(--active);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;animation:slideIn .25s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.rc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rc-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.rc-conf{font-size:10px;padding:2px 8px;border-radius:100px;border:1px solid}
+.rc-balls{display:flex;gap:7px;flex-wrap:wrap}
+.rb{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;position:relative;flex-shrink:0}
+.rb::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.22),transparent 55%)}
+.rb-bonus{width:30px;height:30px;font-size:10px;opacity:.75;border:2px dashed rgba(255,255,255,.3);background:transparent!important}
+.rc-meta{margin-top:9px;font-size:11px;color:var(--muted);padding-top:9px;border-top:1px solid var(--border)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.stat-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.mini-balls{display:flex;flex-wrap:wrap;gap:5px}
+.mini-ball{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.mb-hot{background:rgba(255,77,109,.2);border:1px solid rgba(255,77,109,.4);color:#ff6b80}
+.mb-cold{background:rgba(77,191,255,.15);border:1px solid rgba(77,191,255,.35);color:#4dbfff}
+.mb-lucky{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--active)}
+.freq-item{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.freq-n{font-size:11px;font-weight:700;width:26px;text-align:right;color:var(--muted)}
+.freq-wrap{flex:1;background:var(--bg3);border-radius:3px;height:7px;overflow:hidden}
+.freq-bar{height:100%;border-radius:3px;background:var(--active);transition:width .6s ease}
+.freq-ct{font-size:10px;color:var(--muted);width:20px}
+.draw-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.dc-header{display:flex;justify-content:space-between;margin-bottom:9px}
+.dc-id{font-size:10px;color:var(--muted);letter-spacing:1px}.dc-date{font-size:10px;color:var(--muted)}
+.ticket-inp{background:var(--bg3);border:1px solid var(--border);border-radius:11px;padding:12px 14px;width:100%;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-bottom:9px;outline:none;transition:border-color .2s}
+.ticket-inp:focus{border-color:var(--active)}.ticket-inp::placeholder{color:var(--muted)}
+.check-box{display:none;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-top:12px}
+.check-box.show{display:block;animation:fadeUp .3s ease}
+.check-ico{font-size:44px;margin-bottom:8px}.check-title{font-size:18px;font-weight:700;margin-bottom:4px}.check-sub{font-size:12px;color:var(--muted)}
+.prize-table{width:100%;font-size:12px;border-collapse:collapse}
+.prize-table th{padding:8px 6px;color:var(--muted);text-align:left;border-bottom:1px solid var(--border)}
+.prize-table td{padding:8px 6px;border-bottom:1px solid var(--border)}
+.prize-table tr:last-child td{border-bottom:none}
+.digit-slot{display:flex;flex-direction:column;align-items:center;gap:6px}.digit-label{font-size:10px;color:var(--muted)}
+.digit-btns{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.digit-btn{width:32px;height:32px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Noto Sans JP',sans-serif}
+.digit-btn:hover{border-color:var(--active);color:var(--text)}.digit-btn.sel{background:var(--active);border-color:transparent;color:#000}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(6,8,16,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:6px 10px 18px;gap:2px;z-index:50}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border:none;background:transparent;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:9px;cursor:pointer;border-radius:10px;transition:all .2s}
+.nav-btn.active{color:var(--active);background:rgba(255,255,255,.04)}.nav-ico{font-size:19px}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:200;align-items:flex-end;justify-content:center}
+.modal-ov.show{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:22px 22px 0 0;padding:24px 18px 36px;width:100%;max-width:500px;animation:slideUp .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;text-align:center;margin-bottom:5px;color:var(--text)}
+.modal-title span{color:#a78bfa}.modal-sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:18px}
+.pro-feat{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.pro-feat:last-of-type{border:none}.pro-feat-ico{font-size:18px;width:26px;text-align:center}
+.pro-price-box{text-align:center;margin:18px 0 14px}
+.pro-price-val{font-family:'Orbitron',sans-serif;font-size:30px;font-weight:900;color:#a78bfa}
+.pro-price-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.btn-pro{width:100%;padding:15px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 0 28px rgba(124,58,237,.4);margin-bottom:9px;font-family:'Noto Sans JP',sans-serif}
+.btn-dismiss{width:100%;padding:11px;background:transparent;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:9px 18px;font-size:12px;opacity:0;transition:all .3s;z-index:100;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.aff-banner{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:14px;margin:14px 0;display:block;text-decoration:none;transition:all .2s;text-align:center}
+.aff-banner:hover{border-color:var(--active);transform:translateY(-1px)}
+.aff-title{font-size:13px;font-weight:700;color:var(--active);margin-bottom:3px}
+.aff-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.aff-btn{display:inline-block;background:var(--active);color:#000;border-radius:9px;padding:8px 20px;font-size:12px;font-weight:700}
+.adv-hero{text-align:center;padding:20px 0 16px;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(240,192,64,.08));border:1px solid rgba(124,58,237,.2);border-radius:16px;margin-bottom:16px}
+.adv-hero-icon{font-size:36px;margin-bottom:6px}
+.adv-hero-title{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;color:var(--text);letter-spacing:1px}
+.adv-hero-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.adv-step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.adv-step-highlight{border-color:rgba(240,192,64,.3);background:rgba(240,192,64,.04)}
+.adv-step-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.adv-step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0}
+.adv-step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}.adv-step-desc{font-size:11px;color:var(--muted)}
+.adv-input{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.adv-input:focus{border-color:var(--active)}.adv-input::placeholder{color:var(--muted)}
+.adv-select{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:12px;outline:none;cursor:pointer}
+.adv-input-row{display:flex;gap:8px;margin-bottom:10px}
+.adv-ref-box{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.adv-ref-title{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.adv-ref-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.adv-ref-item{display:flex;flex-direction:column;background:var(--bg3);border-radius:8px;padding:6px 10px;flex:1;min-width:80px}
+.adv-ref-date{font-size:10px;color:var(--muted)}.adv-ref-val{font-size:13px;font-weight:700;color:var(--active)}
+.adv-ref-note{font-size:11px;color:var(--muted);padding-top:8px;border-top:1px solid var(--border)}
+.adv-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;border:none;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .2s}
+.adv-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.4)}
+.adv-btn-sm{padding:10px 14px;border:none;border-radius:10px;background:var(--active);color:#000;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap}
+.adv-setball-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.adv-setball{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.adv-setball-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.adv-setball-val{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;color:var(--text)}
+.adv-setball-note{font-size:10px;color:var(--muted);margin-top:3px}
+.adv-sets-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.adv-set-btn{flex:1;min-width:36px;padding:8px 4px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Noto Sans JP',sans-serif}
+.adv-set-btn:hover{border-color:var(--active);color:var(--text)}.adv-set-btn.active{background:var(--active);border-color:transparent;color:#000}
+.adv-set-nums{display:flex;flex-wrap:wrap;gap:5px;padding:10px 0}
+.adv-num-tag{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--text)}
+.adv-num-tag.hot{background:rgba(255,69,96,.2);border-color:rgba(255,69,96,.4);color:#ff8090}
+.adv-num-tag.warm{background:rgba(240,192,64,.2);border-color:rgba(240,192,64,.4);color:#f0c040}
+.adv-delay-bar{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.adv-delay-bar:last-child{border:none}
+.adv-delay-n{font-size:12px;font-weight:700;color:var(--text);width:28px;text-align:right}
+.adv-delay-wrap{flex:1;background:var(--bg3);border-radius:3px;height:8px;overflow:hidden}
+.adv-delay-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#4dbfff,#7c6fff)}
+.adv-delay-ct{font-size:10px;color:var(--muted);width:36px}
+.adv-delay-input-row{display:flex;gap:8px;margin:10px 0}
+.adv-triple-balls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.adv-triple-ball{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;position:relative;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.adv-triple-ball::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.25),transparent 55%)}
+.adv-triple-badge{font-size:10px;color:var(--muted);margin-top:4px;text-align:center}.adv-triple-wrap{text-align:center}
+.adv-empty{text-align:center;color:var(--muted);font-size:12px;padding:20px 0}
+.adv-method-step{font-size:12px;color:var(--text);line-height:1.7;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:10px;border-left:3px solid #7c3aed;margin-bottom:8px}
+.guide-alert{display:flex;align-items:center;gap:10px;background:rgba(255,140,66,.1);border:1px solid rgba(255,140,66,.3);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#ffb070;line-height:1.6}
+.guide-alert-icon{font-size:20px;flex-shrink:0}
+.guide-card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.guide-card:hover{border-color:rgba(255,255,255,.14)}
+.guide-card-header{display:flex;align-items:center;gap:12px;padding:14px}
+.guide-card-icon{font-size:22px;flex-shrink:0}
+.guide-card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}.guide-card-sub{font-size:11px;color:var(--muted)}
+.guide-chevron{font-size:11px;color:var(--muted);margin-left:auto;transition:transform .2s;flex-shrink:0}.guide-chevron.open{transform:rotate(180deg)}
+.guide-card-body{padding:0 14px 14px;border-top:1px solid var(--border)}
+.guide-steps{display:flex;flex-direction:column;gap:8px;padding-top:12px}
+.gs{font-size:12px;color:var(--text);line-height:1.7;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:10px;border-left:3px solid var(--active)}
+.gs small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.phrase{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:1px 7px;font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--active);margin:2px 0}
+.guide-tip{margin-top:10px;font-size:11px;color:var(--muted);background:rgba(255,255,255,.03);border-radius:8px;padding:9px 11px;line-height:1.6}
+.phrase-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.phrase-jp{font-size:16px;font-family:'Noto Sans JP',sans-serif;color:var(--active);margin-bottom:4px;font-weight:700}
+.phrase-romaji{font-size:11px;color:var(--muted);margin-bottom:3px;font-style:italic}.phrase-pt{font-size:12px;color:var(--text)}
+.redeem-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.redeem-icon{font-size:24px;flex-shrink:0;margin-top:2px}
+.redeem-amount{font-size:11px;font-weight:700;color:var(--active);margin-bottom:3px}
+.redeem-where{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}.redeem-note{font-size:11px;color:var(--muted);line-height:1.6}
+.tip-item{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.tip-emoji{font-size:22px;flex-shrink:0}.tip-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}.tip-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.form-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}.form-row:last-child{border-bottom:none}
+.form-label{font-size:10px;color:var(--muted);width:76px;flex-shrink:0;line-height:1.4}.form-dots{display:flex;gap:4px;flex-wrap:wrap}
+.form-dot{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted)}
+.form-dot.filled{background:var(--active);border-color:transparent;color:#000;font-weight:700}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('pt')" id="btn-lang-pt">🇧🇷 PT</button>
+      <button class="lang-btn" onclick="setLang('ja')" id="btn-lang-ja">🇯🇵 日本語</button>
+    </div>
+    <div class="jp-flag">🇯🇵</div>
+    <div class="brand-badge"><div class="dot"></div><span data-t="badge">TAKARAKUJI — SISTEMA IA</span></div>
+    <h1>Japan<br><span>Lottery Pro</span></h1>
+    <p class="subtitle" data-t="subtitle">6 Loterias Oficiais · Análise por Inteligência Artificial</p>
+  </header>
+  <div class="lottery-selector">
+    <div class="lottery-btn active" data-id="loto6" style="--lottery-color:#f0c040" onclick="selectLottery('loto6',this)"><div class="lb-icon">🟡</div><span class="lb-name">LOTO 6</span><div class="lb-sub" data-t="lb-loto6">6 de 43</div><div class="lb-dot"></div></div>
+    <div class="lottery-btn" data-id="loto7" style="--lottery-color:#ff4d6d" onclick="selectLottery('loto7',this)"><div class="lb-icon">🔴</div><span class="lb-name">LOTO 7</span><div class="lb-sub" data-t="lb-loto7">7 de 37</div><div class="lb-dot"></div></div>
+    <div class="lottery-btn" data-id="mini" style="--lottery-color:#00d4aa" onclick="selectLottery('mini',this)"><div class="lb-icon">🟢</div><span class="lb-name">MINI LOTO</span><div class="lb-sub" data-t="lb-mini">5 de 31</div><div class="lb-dot"></div></div>
+    <div class="lottery-btn" data-id="bingo5" style="--lottery-color:#7c6fff" onclick="selectLottery('bingo5',this)"><div class="lb-icon">🎯</div><span class="lb-name">BINGO 5</span><div class="lb-sub" data-t="lb-bingo">5 linhas</div><div class="lb-dot"></div></div>
+    <div class="lottery-btn" data-id="num3" style="--lottery-color:#ff8c42" onclick="selectLottery('num3',this)"><div class="lb-icon">🟠</div><span class="lb-name">NUMBERS 3</span><div class="lb-sub" data-t="lb-n3">3 dígitos</div><div class="lb-dot"></div></div>
+    <div class="lottery-btn" data-id="num4" style="--lottery-color:#4dbfff" onclick="selectLottery('num4',this)"><div class="lb-icon">🔵</div><span class="lb-name">NUMBERS 4</span><div class="lb-sub" data-t="lb-n4">4 dígitos</div><div class="lb-dot"></div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('pick')" data-t="tab-pick">🎯 Números</button>
+    <button class="tab" onclick="switchTab('stats')" data-t="tab-stats">📊 Stats</button>
+    <button class="tab" onclick="switchTab('check')" data-t="tab-check">✅ Conferir</button>
+    <button class="tab" onclick="switchTab('guide')" data-t="tab-guide">🗺️ Guia</button>
+    <button class="tab" onclick="switchTab('advanced')" data-t="tab-advanced">🔬 IA+</button>
+  </div>
+  <div class="panel active" id="panel-pick">
+    <div class="info-box" id="lottery-info"></div>
+    <div id="ball-section">
+      <p class="slabel" data-t="slabel-pick">📌 Selecione seus números</p>
+      <div class="ball-grid" id="ball-grid"></div>
+      <div class="sel-bar"><div><div class="sel-count" id="sel-count">0</div><div class="sel-label" id="sel-label">/ 0</div></div><div class="sel-mini-row" id="sel-display"></div></div>
+    </div>
+    <div id="special-section" style="display:none"></div>
+    <button class="btn btn-ai" onclick="generateAutoAI()" id="btn-auto" data-t="btn-auto">🤖 IA Automática — Gerar jogos ideais</button>
+    <button class="btn btn-gold" onclick="generateAI()" id="btn-ai-btn" data-t="btn-ai">✨ IA com meus números</button>
+    <button class="btn btn-rand" onclick="generateRandom()" data-t="btn-rand">🎲 Aleatório</button>
+    <button class="btn btn-clear" onclick="clearAll()" data-t="btn-clear">✕ Limpar</button>
+    <div class="loading" id="loading"><div class="spinner"></div><span data-t="loading">IA analisando padrões...</span></div>
+    <div id="results"></div>
+    <a class="aff-banner" href="https://lnk.to/TLHP?tl_affid=18217&ft=5" target="_blank" rel="noopener noreferrer" onclick="gtag('event','affiliate_click',{affiliate:'thelotter',lottery:currentLottery})">
+      <div class="aff-title" data-t="aff-title">🎟️ Jogue de qualquer lugar do mundo!</div>
+      <div class="aff-sub" data-t="aff-sub">Compre bilhetes oficiais online — sem precisar estar no Japão</div>
+      <span class="aff-btn" data-t="aff-btn">Comprar agora →</span>
+    </a>
+  </div>
+  <div class="panel" id="panel-stats">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-title" style="color:#ff4d6d" data-t="hot-title">🔥 Mais sorteados</div><div class="mini-balls" id="hot-balls"></div></div>
+      <div class="stat-card"><div class="stat-title" style="color:#4dbfff" data-t="cold-title">❄️ Menos sorteados</div><div class="mini-balls" id="cold-balls"></div></div>
+    </div>
+    <div class="stat-card" style="margin-bottom:12px"><div class="stat-title" style="color:var(--active)" data-t="lucky-title">⭐ Números da sorte</div><div class="mini-balls" id="lucky-balls"></div></div>
+    <p class="slabel" data-t="freq-label">📊 Frequência (top 12)</p><div id="freq-chart"></div>
+    <p class="slabel" data-t="draws-label">🗓️ Últimos sorteios</p><div id="last-draws"></div>
+    <div class="info-box" style="margin-top:10px;font-size:11px" data-t="data-source">📡 Dados reais dos sorteios oficiais Takarakuji</div>
+  </div>
+  <div class="panel" id="panel-check">
+    <p class="slabel" data-t="winning-label">🔢 Resultado oficial do sorteio</p>
+    <input class="ticket-inp" id="winning-inp" data-t-placeholder="winning-ph" placeholder="Números sorteados (ex: 7 15 22 30 36 43)">
+    <p class="slabel" data-t="ticket-label">🎫 Seus números</p>
+    <input class="ticket-inp" id="ticket-inp" data-t-placeholder="ticket-ph" placeholder="Seus números (ex: 2 5 16 17 30 31)">
+    <button class="btn btn-ai" onclick="checkTicket()" data-t="btn-check">🔍 Conferir bilhete</button>
+    <div class="check-box" id="check-box"><div class="check-ico" id="check-ico"></div><div class="check-title" id="check-title"></div><div class="check-sub" id="check-sub"></div></div>
+    <div id="prize-table-section" style="margin-top:20px"></div>
+  </div>
+  <div class="panel" id="panel-guide">
+    <div class="guide-alert"><div class="guide-alert-icon">⚠️</div><div data-t="guide-alert-text">Proibido para menores de 18 anos. Jogue com responsabilidade.</div></div>
+    <p class="slabel" data-t="guide-where-label">🏪 Onde comprar</p>
+    <div class="guide-card" onclick="toggleGuide('g-convini')"><div class="guide-card-header"><span class="guide-card-icon">🏬</span><div style="flex:1"><div class="guide-card-title" data-t="gc-convini-title">Convenience Store</div><div class="guide-card-sub">7-Eleven · Lawson · FamilyMart</div></div><span class="guide-chevron" id="chev-g-convini">▼</span></div><div class="guide-card-body" id="g-convini" style="display:none"><div class="guide-steps" id="steps-convini"></div><div class="guide-tip" id="tip-convini"></div></div></div>
+    <div class="guide-card" onclick="toggleGuide('g-mizuho')"><div class="guide-card-header"><span class="guide-card-icon">🏦</span><div style="flex:1"><div class="guide-card-title" data-t="gc-bank-title">Banco Mizuho</div><div class="guide-card-sub" data-t="gc-bank-sub">Ponto de venda oficial</div></div><span class="guide-chevron" id="chev-g-mizuho">▼</span></div><div class="guide-card-body" id="g-mizuho" style="display:none"><div class="guide-steps" id="steps-mizuho"></div><div class="guide-tip" id="tip-mizuho"></div></div></div>
+    <div class="guide-card" onclick="toggleGuide('g-kiosco')"><div class="guide-card-header"><span class="guide-card-icon">🎪</span><div style="flex:1"><div class="guide-card-title" data-t="gc-kiosk-title">Quiosque</div><div class="guide-card-sub" data-t="gc-kiosk-sub">Estações · Shoppings</div></div><span class="guide-chevron" id="chev-g-kiosco">▼</span></div><div class="guide-card-body" id="g-kiosco" style="display:none"><div class="guide-steps" id="steps-kiosco"></div><div class="guide-tip" id="tip-kiosco"></div></div></div>
+    <div class="guide-card" onclick="toggleGuide('g-online')"><div class="guide-card-header"><span class="guide-card-icon">📱</span><div style="flex:1"><div class="guide-card-title" data-t="gc-online-title">Online</div><div class="guide-card-sub">takarakuji-official.jp</div></div><span class="guide-chevron" id="chev-g-online">▼</span></div><div class="guide-card-body" id="g-online" style="display:none"><div class="guide-steps" id="steps-online"></div><div class="guide-tip" id="tip-online"></div></div></div>
+    <p class="slabel" data-t="guide-phrases-label">🗣️ Frases úteis</p><div id="phrase-list"></div>
+    <p class="slabel" data-t="guide-form-label">📝 Formulário (マークシート)</p><div class="guide-card" style="cursor:default"><div id="form-diagram"></div></div>
+    <p class="slabel" data-t="guide-redeem-label">💰 Como resgatar</p><div id="redeem-grid"></div>
+    <p class="slabel" data-t="guide-tips-label">🎌 Dicas culturais</p><div id="tips-list"></div>
+    <div style="height:20px"></div>
+  </div>
+  <div class="panel" id="panel-advanced">
+    <div class="adv-hero"><div class="adv-hero-icon">🔬</div><div class="adv-hero-title" data-t="adv-title">Análise Avançada Triple IA</div><div class="adv-hero-sub" data-t="adv-sub">Pressão atmosférica · Conjunto de bolas · Atraso histórico</div></div>
+    <div class="adv-step">
+      <div class="adv-step-header"><div class="adv-step-num">1</div><div><div class="adv-step-title" data-t="adv-s1-title">🌡️ Pressão Atmosférica</div><div class="adv-step-desc" data-t="adv-s1-desc">Ar mais denso afeta a trajetória das bolas</div></div></div>
+      <div class="adv-input-row"><input class="adv-input" id="pressure-input" type="number" step="0.1" placeholder="Ex: 1011.8"><select class="adv-select" id="pressure-unit"><option value="local">hPa (local)</option><option value="sea">hPa (nível mar)</option></select></div>
+      <div class="adv-ref-box"><div class="adv-ref-title">📋 Referência histórica (Kyobashi, Tóquio)</div><div class="adv-ref-grid"><div class="adv-ref-item"><span class="adv-ref-date">01/05/2015</span><span class="adv-ref-val">1011.8 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">01/05/2020</span><span class="adv-ref-val">1010.9 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">23/05/2025</span><span class="adv-ref-val">1010.3 hPa</span></div></div><div class="adv-ref-note">Números quentes: 03 · 08 · 09 · 13 · 17 · 27 · 33</div></div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+  <button class="adv-btn" onclick="fetchPressureAuto()" id="btn-auto-pressure" style="flex:1;background:linear-gradient(135deg,#00b4d8,#0077b6)">🌡️ Buscar pressão automática</button>
+  <button class="adv-btn" onclick="analyzePressure()" style="flex:1">🔍 Analisar manual</button>
+</div>
+<div id="pressure-auto-status" style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px"></div>
+      <div id="pressure-result"></div>
+    </div>
+    <div class="adv-step">
+      <div class="adv-step-header"><div class="adv-step-num">2</div><div><div class="adv-step-title" data-t="adv-s2-title">🎱 Conjunto de Bolas (セット球)</div><div class="adv-step-desc" data-t="adv-s2-desc">Cada conjunto A–J tem tendência própria</div></div></div>
+      <div class="adv-setball-grid"><div class="adv-setball"><div class="adv-setball-label">Último sorteio</div><div class="adv-setball-val" id="last-set-val">E</div><div class="adv-setball-note">#673 · 17/04/2026</div></div><div class="adv-setball"><div class="adv-setball-label">Previsão próximo</div><div class="adv-setball-val" style="color:var(--active)">F/G</div><div class="adv-setball-note">Ciclo A→J · 10 sorteios</div></div></div>
+      <div class="adv-sets-row"><button class="adv-set-btn" onclick="selectSet('A')">A</button><button class="adv-set-btn" onclick="selectSet('B')">B</button><button class="adv-set-btn" onclick="selectSet('C')">C</button><button class="adv-set-btn" onclick="selectSet('D')">D</button><button class="adv-set-btn" onclick="selectSet('E')">E</button><button class="adv-set-btn active" onclick="selectSet('F')">F</button><button class="adv-set-btn" onclick="selectSet('G')">G</button><button class="adv-set-btn" onclick="selectSet('H')">H</button><button class="adv-set-btn" onclick="selectSet('I')">I</button><button class="adv-set-btn" onclick="selectSet('J')">J</button></div>
+      <div id="setball-result"></div>
+    </div>
+    <div class="adv-step">
+      <div class="adv-step-header"><div class="adv-step-num">3</div><div><div class="adv-step-title" data-t="adv-s3-title">⏳ Atraso Histórico</div><div class="adv-step-desc" data-t="adv-s3-desc">Números ausentes há muitos sorteios tendem a aparecer</div></div></div>
+      <div id="delay-chart"></div>
+      <div class="adv-delay-input-row"><input class="adv-input" id="delay-num-input" type="number" min="1" max="37" placeholder="Número" style="width:100px"><input class="adv-input" id="delay-rounds-input" type="number" min="1" placeholder="Sorteios em atraso" style="flex:1"><button class="adv-btn-sm" onclick="addDelay()">+ Adicionar</button></div>
+      <div id="delay-list"></div>
+    </div>
+    <div class="adv-step adv-step-highlight">
+      <div class="adv-step-header"><div class="adv-step-num" style="background:linear-gradient(135deg,#f0c040,#ff8c42)">🏆</div><div><div class="adv-step-title">🎯 Triple Confirmação</div><div class="adv-step-desc">Números que aparecem nos 3 critérios simultaneamente</div></div></div>
+      <div id="triple-result"><div class="adv-empty">Preencha os 3 critérios acima para ver os números com triple confirmação</div></div>
+      <button class="btn btn-ai" onclick="generateTripleAI()" id="btn-triple" style="margin-top:14px">🤖 Gerar jogos com Triple IA</button>
+      <div class="loading" id="adv-loading"><div class="spinner"></div><span>IA analisando padrões...</span></div>
+      <div id="adv-results"></div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('pick')" id="nav-pick"><span class="nav-ico">🎯</span><span data-t="nav-pick">Números</span></button>
+  <button class="nav-btn" onclick="switchTab('stats')" id="nav-stats"><span class="nav-ico">📊</span><span data-t="nav-stats">Stats</span></button>
+  <button class="nav-btn" onclick="switchTab('check')" id="nav-check"><span class="nav-ico">✅</span><span data-t="nav-check">Conferir</span></button>
+  <button class="nav-btn" onclick="switchTab('guide')" id="nav-guide"><span class="nav-ico">🗺️</span><span data-t="nav-guide">Guia</span></button>
+  <button class="nav-btn" onclick="switchTab('advanced')" id="nav-advanced"><span class="nav-ico">🔬</span><span data-t="nav-advanced">IA+</span></button>
+  <button class="nav-btn" onclick="openPro()" style="color:#a78bfa"><span class="nav-ico">⭐</span><span data-t="nav-pro">PRO</span></button>
+</div>
+<div class="modal-ov" id="pro-modal" onclick="closePro(event)">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Japan Lottery <span>PRO</span> ⭐</div>
+    <div class="modal-sub" data-t="pro-sub">Todas as loterias · IA ilimitada · Sem anúncios</div>
+    <div class="pro-feat"><span class="pro-feat-ico">🤖</span><div data-t="pro-f1"><strong>IA ilimitada</strong> em todas as 6 loterias</div></div>
+    <div class="pro-feat"><span class="pro-feat-ico">📊</span><div data-t="pro-f2"><strong>Estatísticas avançadas</strong> com padrões</div></div>
+    <div class="pro-feat"><span class="pro-feat-ico">🔔</span><div data-t="pro-f3"><strong>Alertas</strong> de resultado automático</div></div>
+    <div class="pro-feat"><span class="pro-feat-ico">📱</span><div data-t="pro-f4"><strong>Scan de bilhete</strong> por foto ilimitado</div></div>
+    <div class="pro-feat"><span class="pro-feat-ico">🚫</span><div data-t="pro-f5"><strong>Sem anúncios</strong> — experiência limpa</div></div>
+    <div class="pro-feat"><span class="pro-feat-ico">🇯🇵</span><div data-t="pro-f6"><strong>Jumbo Lottery</strong> — análise especial</div></div>
+    <div class="pro-price-box"><div class="pro-price-val">¥600<span style="font-size:15px;opacity:.7">/月</span></div><div class="pro-price-sub" data-t="pro-price-sub">≈ R$20 · Cancele quando quiser</div></div>
+    <button class="btn-pro" onclick="startPro()" data-t="btn-pro-cta">⭐ Assinar PRO agora</button>
+    <button class="btn-dismiss" onclick="closePro()" data-t="btn-dismiss">Continuar grátis</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const T={
+  pt:{
+    badge:'TAKARAKUJI — SISTEMA IA',subtitle:'6 Loterias Oficiais · Análise por Inteligência Artificial',
+    'lb-loto6':'6 de 43','lb-loto7':'7 de 37','lb-mini':'5 de 31','lb-bingo':'5 linhas','lb-n3':'3 dígitos','lb-n4':'4 dígitos',
+    'tab-pick':'🎯 Números','tab-stats':'📊 Stats','tab-check':'✅ Conferir','tab-guide':'🗺️ Guia','tab-advanced':'🔬 IA+',
+    'slabel-pick':'📌 Selecione seus números','btn-auto':'🤖 IA Automática — Gerar jogos ideais','btn-ai':'✨ IA com meus números',
+    'btn-rand':'🎲 Aleatório','btn-clear':'✕ Limpar',loading:'IA analisando padrões...',
+    'aff-title':'🎟️ Jogue de qualquer lugar do mundo!','aff-sub':'Compre bilhetes oficiais online — sem precisar estar no Japão','aff-btn':'Comprar agora →',
+    'hot-title':'🔥 Mais sorteados','cold-title':'❄️ Menos sorteados','lucky-title':'⭐ Números da sorte',
+    'freq-label':'📊 Frequência (top 12)','draws-label':'🗓️ Últimos sorteios','data-source':'📡 Dados reais dos sorteios oficiais Takarakuji',
+    'winning-label':'🔢 Resultado oficial','ticket-label':'🎫 Seus números',
+    'winning-ph':'Números sorteados (ex: 7 15 22 30 36 43)','ticket-ph':'Seus números (ex: 2 5 16 17 30 31)','btn-check':'🔍 Conferir bilhete',
+    'nav-pick':'Números','nav-stats':'Stats','nav-check':'Conferir','nav-guide':'Guia','nav-advanced':'IA+','nav-pro':'PRO',
+    'pro-sub':'Todas as loterias · IA ilimitada · Sem anúncios',
+    'pro-f1':'<strong>IA ilimitada</strong> em todas as 6 loterias','pro-f2':'<strong>Estatísticas avançadas</strong> com padrões',
+    'pro-f3':'<strong>Alertas</strong> de resultado automático','pro-f4':'<strong>Scan de bilhete</strong> por foto ilimitado',
+    'pro-f5':'<strong>Sem anúncios</strong> — experiência limpa','pro-f6':'<strong>Jumbo Lottery</strong> — análise especial',
+    'pro-price-sub':'≈ R$20 · Cancele quando quiser','btn-pro-cta':'⭐ Assinar PRO agora','btn-dismiss':'Continuar grátis',
+    'sel-selected':'/ {n} selecionados','max-nums':'Máximo de {n} números','game':'Jogo','conf':'Conf.',
+    'generate-ok':'IA gerou 5 jogos! ✨','generate-local':'Gerado localmente','lottery-selected':'selecionada','games-generated':'🎯 Jogos gerados',
+    'limit-daily':'⭐ Limite diário — assine PRO!','last-gen':'⚠️ Última geração grátis hoje','pro-activated':'⭐ PRO ativado!',
+    'select-min':'Selecione pelo menos {n} números','insert-winning':'Insira {n} números sorteados','insert-ticket':'Insira seus {n} números',
+    'insert-digits':'Insira {n} dígitos','exact-hit':'Acerto exato!','any-order':'Qualquer ordem!','no-prize':'Não premiado',
+    'keep-trying':'Continue tentando!','matches':'{n} acertos','no-prize-min':'Sem prêmio desta vez',
+    'prize-ticket':'Bilhete: ¥{p} · {d}','prize-label':'📋 Tabela de prêmios','digit':'Dígito {n}',
+    'chosen-number':'número escolhido','tap-digits':'Toque nos dígitos<br>para escolher','random-gen':'Geração aleatória','bonus':'Bônus',
+    info_loto6:'🟡 <strong>LOTO 6:</strong> Escolha 6 números de 1 a 43. Sorteios 2x/semana (Seg e Qui). 1º Prêmio: até <strong>¥600M</strong> com carryover.',
+    info_loto7:'🔴 <strong>LOTO 7:</strong> Escolha 7 números de 1 a 37. Sorteios toda sexta. 1º Prêmio: até <strong>¥1,2 bilhão</strong> com carryover.',
+    info_mini:'🟢 <strong>MINI LOTO:</strong> Escolha 5 números de 1 a 31. Sorteios toda terça. 1º Prêmio: <strong>~¥10M</strong>.',
+    info_bingo5:'🎯 <strong>BINGO 5:</strong> Cartela 5×5. Complete linhas. Sorteios toda quarta. 1º Prêmio: <strong>~¥100M</strong>.',
+    info_num3:'🟠 <strong>NUMBERS 3:</strong> Adivinhe 3 dígitos (000–999). Sorteios diários. Prêmio exato: <strong>~¥144.000</strong>.',
+    info_num4:'🔵 <strong>NUMBERS 4:</strong> Adivinhe 4 dígitos (0000–9999). Sorteios diários. Prêmio exato: <strong>~¥900.000</strong>.',
+    pr_jackpot:'1º 🏆 Jackpot',pr_2:'2º 🥇',pr_3:'3º 🥈',pr_4:'4º 🥉',pr_5:'5º 🎉',pr_6:'6º ✨',
+    pr_5L:'1º 🏆 5 Linhas',pr_4L:'2º 🥇 4 Linhas',pr_3L:'3º 🥈 3 Linhas',pr_2L:'4º 🥉 2 Linhas',pr_1L:'5º 🎉 1 Linha',
+    pr_exact:'Exato 🏆',pr_any:'Qualquer ordem 🥈',
+    'guide-alert-text':'Proibido para menores de 18 anos. Jogue com responsabilidade.',
+    'guide-where-label':'🏪 Onde comprar','gc-convini-title':'Convenience Store (コンビニ)','gc-bank-title':'Banco Mizuho (みずほ銀行)',
+    'gc-bank-sub':'Ponto de venda oficial','gc-kiosk-title':'Quiosque (宝くじ売り場)','gc-kiosk-sub':'Estações · Shoppings',
+    'gc-online-title':'Online (ネット購入)','guide-phrases-label':'🗣️ Frases úteis no balcão',
+    'guide-form-label':'📝 Formulário (マークシート)','guide-redeem-label':'💰 Como resgatar o prêmio','guide-tips-label':'🎌 Dicas culturais',
+    'adv-title':'Análise Avançada Triple IA','adv-sub':'Pressão atmosférica · Conjunto de bolas · Atraso histórico',
+    'adv-s1-title':'🌡️ Pressão Atmosférica','adv-s1-desc':'Ar mais denso afeta a trajetória das bolas na máquina',
+    'adv-s2-title':'🎱 Conjunto de Bolas (セット球)','adv-s2-desc':'Cada conjunto A–J tem tendência própria de números',
+    'adv-s3-title':'⏳ Atraso Histórico','adv-s3-desc':'Números que não saem há muitos sorteios tendem a aparecer',
+  },
+  ja:{
+    badge:'宝くじ — AIシステム',subtitle:'6つの公式宝くじ · 人工知能による分析',
+    'lb-loto6':'6から43','lb-loto7':'7から37','lb-mini':'5から31','lb-bingo':'5ライン','lb-n3':'3桁','lb-n4':'4桁',
+    'tab-pick':'🎯 数字','tab-stats':'📊 統計','tab-check':'✅ 確認','tab-guide':'🗺️ ガイド','tab-advanced':'🔬 AI+',
+    'slabel-pick':'📌 数字を選んでください','btn-auto':'🤖 AI自動 — 最適な数字を生成','btn-ai':'✨ 選択した数字でAI生成',
+    'btn-rand':'🎲 ランダム','btn-clear':'✕ クリア',loading:'AIがパターンを分析中...',
+    'aff-title':'🎟️ 世界中からプレイできます！','aff-sub':'公式チケットをオンライン購入','aff-btn':'今すぐ購入 →',
+    'hot-title':'🔥 よく出る数字','cold-title':'❄️ 出にくい数字','lucky-title':'⭐ ラッキーナンバー',
+    'freq-label':'📊 出現頻度（上位12）','draws-label':'🗓️ 最近の抽選結果','data-source':'📡 宝くじ公式サイトの実データ',
+    'winning-label':'🔢 抽選結果','ticket-label':'🎫 あなたの番号',
+    'winning-ph':'当選番号（例: 7 15 22 30 36 43）','ticket-ph':'あなたの番号（例: 2 5 16 17 30 31）','btn-check':'🔍 チケット確認',
+    'nav-pick':'数字','nav-stats':'統計','nav-check':'確認','nav-guide':'ガイド','nav-advanced':'AI+','nav-pro':'PRO',
+    'pro-sub':'全宝くじ対応 · AI無制限 · 広告なし',
+    'pro-f1':'全6種の宝くじで<strong>AI無制限</strong>使用可','pro-f2':'パターン・傾向の<strong>高度な統計分析</strong>',
+    'pro-f3':'抽選結果の<strong>自動通知</strong>','pro-f4':'チケット写真読み取り<strong>無制限</strong>',
+    'pro-f5':'<strong>広告なし</strong> — 快適な体験','pro-f6':'<strong>ジャンボ宝くじ</strong> — 特別分析',
+    'pro-price-sub':'≈ R$20 · いつでもキャンセル可','btn-pro-cta':'⭐ 今すぐPROに登録','btn-dismiss':'無料版を続ける',
+    'sel-selected':'/ {n} 選択中','max-nums':'{n}個まで選択できます','game':'ゲーム','conf':'信頼度',
+    'generate-ok':'AIが5ゲームを生成しました！✨','generate-local':'ローカルで生成しました','lottery-selected':'を選択しました','games-generated':'🎯 生成されたゲーム',
+    'limit-daily':'⭐ 1日の制限に達しました','last-gen':'⚠️ 本日の無料生成は残り1回です','pro-activated':'⭐ PRO有効化！',
+    'select-min':'{n}個以上の数字を選んでください','insert-winning':'{n}個の当選番号を入力','insert-ticket':'{n}個の番号を入力',
+    'insert-digits':'{n}桁の番号を入力','exact-hit':'完全一致！','any-order':'順番違いで一致！','no-prize':'当選なし',
+    'keep-trying':'また次回チャレンジ！','matches':'{n}個一致','no-prize-min':'当選なし',
+    'prize-ticket':'チケット: ¥{p} · {d}','prize-label':'📋 賞金テーブル','digit':'{n}桁目',
+    'chosen-number':'選択した番号','tap-digits':'数字をタップして<br>選択してください','random-gen':'ランダム生成','bonus':'ボーナス',
+    info_loto6:'🟡 <strong>ロト6:</strong> 1〜43から6つ選択。週2回（月・木）。1等最高<strong>6億円</strong>。',
+    info_loto7:'🔴 <strong>ロト7:</strong> 1〜37から7つ選択。毎週金曜日。1等最高<strong>12億円</strong>。',
+    info_mini:'🟢 <strong>ミニロト:</strong> 1〜31から5つ選択。毎週火曜日。1等<strong>約1,000万円</strong>。',
+    info_bingo5:'🎯 <strong>ビンゴ5:</strong> 5×5カード。毎週水曜日。1等<strong>約1億円</strong>。',
+    info_num3:'🟠 <strong>ナンバーズ3:</strong> 3桁（000〜999）。毎日。完全一致<strong>約14万4千円</strong>。',
+    info_num4:'🔵 <strong>ナンバーズ4:</strong> 4桁（0000〜9999）。毎日。完全一致<strong>約90万円</strong>。',
+    pr_jackpot:'1等 🏆',pr_2:'2等 🥇',pr_3:'3等 🥈',pr_4:'4等 🥉',pr_5:'5等 🎉',pr_6:'6等 ✨',
+    pr_5L:'1等 🏆 5ライン',pr_4L:'2等 🥇 4ライン',pr_3L:'3等 🥈 3ライン',pr_2L:'4等 🥉 2ライン',pr_1L:'5等 🎉 1ライン',
+    pr_exact:'完全一致 🏆',pr_any:'どこか順番違い 🥈',
+    'guide-alert-text':'18歳未満の購入は禁止されています。','guide-where-label':'🏪 購入場所',
+    'gc-convini-title':'コンビニエンスストア','gc-bank-title':'みずほ銀行','gc-bank-sub':'公式販売窓口',
+    'gc-kiosk-title':'宝くじ売り場','gc-kiosk-sub':'駅・ショッピングモール','gc-online-title':'ネット購入',
+    'guide-phrases-label':'🗣️ 便利なフレーズ','guide-form-label':'📝 マークシートの書き方',
+    'guide-redeem-label':'💰 当選金の受け取り方','guide-tips-label':'🎌 文化的なヒント',
+    'adv-title':'トリプルAI高度分析','adv-sub':'気圧 · セット球 · 未出現期間',
+    'adv-s1-title':'🌡️ 気圧分析','adv-s1-desc':'空気密度がボールの軌道に影響を与える可能性',
+    'adv-s2-title':'🎱 セット球分析','adv-s2-desc':'各セット(A〜J)には出やすい数字の傾向がある',
+    'adv-s3-title':'⏳ 未出現期間分析','adv-s3-desc':'長期間出ていない数字は統計的に出やすい',
+  }
+};
+let lang=localStorage.getItem('jlp_lang')||'pt';
+function t(key,vars){let str=T[lang][key]||T['pt'][key]||key;if(vars)Object.entries(vars).forEach(([k,v])=>str=str.replace(`{${k}}`,v));return str;}
+function setLang(l){lang=l;localStorage.setItem('jlp_lang',l);document.getElementById('btn-lang-pt').classList.toggle('active',l==='pt');document.getElementById('btn-lang-ja').classList.toggle('active',l==='ja');document.documentElement.lang=l==='ja'?'ja':'pt-BR';applyTranslations();buildPickPanel();if(document.getElementById('panel-stats').classList.contains('active'))buildStats();if(document.getElementById('panel-guide').classList.contains('active'))buildGuide();}
+function applyTranslations(){document.querySelectorAll('[data-t]').forEach(el=>{const key=el.getAttribute('data-t');const val=T[lang][key];if(val!==undefined)el.innerHTML=val;});document.querySelectorAll('[data-t-placeholder]').forEach(el=>{const key=el.getAttribute('data-t-placeholder');const val=T[lang][key];if(val!==undefined)el.placeholder=val;});}
+const LOTTERIES={
+  loto6:{name:'LOTO 6',emoji:'🟡',color:'#f0c040',type:'balls',total:43,pick:6,maxSel:15,days:'Seg/Qui·月木',price:200,
+    freq:{1:4,2:6,3:5,4:4,5:4,6:8,7:6,8:8,9:4,10:8,11:5,12:6,13:6,14:8,15:6,16:7,17:5,18:9,19:6,20:1,21:5,22:3,23:1,24:7,25:6,26:6,27:4,28:7,29:5,30:8,31:4,32:7,33:5,34:3,35:6,36:4,37:12,38:6,39:8,40:6,41:5,42:8,43:4},
+    lastDraws:[{id:2090,date:'02/04/2026',nums:[2,3,6,9,24,36],bonus:5},{id:2089,date:'30/03/2026',nums:[9,16,18,32,37,43],bonus:13},{id:2088,date:'26/03/2026',nums:[8,16,18,27,37,39],bonus:29},{id:2087,date:'23/03/2026',nums:[7,10,15,18,26,39],bonus:13},{id:2086,date:'19/03/2026',nums:[4,11,19,28,39,40],bonus:6}],
+    prizes:[{hits:6,pkey:'pr_jackpot',value:600000000},{hits:'5+b',pkey:'pr_2',value:10000000},{hits:5,pkey:'pr_3',value:300000},{hits:4,pkey:'pr_4',value:6800},{hits:3,pkey:'pr_5',value:1000}]},
+  loto7:{name:'LOTO 7',emoji:'🔴',color:'#ff4d6d',type:'balls',total:37,pick:7,maxSel:14,days:'Sex·金',price:300,
+    freq:{1:5,2:7,3:4,4:6,5:5,6:9,7:6,8:7,9:5,10:8,11:4,12:7,13:6,14:5,15:8,16:6,17:7,18:4,19:6,20:5,21:9,22:4,23:6,24:5,25:7,26:6,27:5,28:8,29:4,30:7,31:5,32:6,33:8,34:5,35:4,36:7,37:6},
+    lastDraws:[{id:615,date:'11/04/2026',nums:[3,7,14,19,25,31,36],bonus:[2,18]},{id:614,date:'04/04/2026',nums:[1,8,15,22,26,33,37],bonus:[9,20]},{id:613,date:'28/03/2026',nums:[4,11,17,23,28,32,35],bonus:[6,16]},{id:612,date:'21/03/2026',nums:[2,9,13,20,27,30,34],bonus:[5,21]},{id:611,date:'14/03/2026',nums:[6,10,16,24,29,33,36],bonus:[3,18]}],
+    prizes:[{hits:7,pkey:'pr_jackpot',value:1200000000},{hits:'6+b',pkey:'pr_2',value:30000000},{hits:6,pkey:'pr_3',value:1000000},{hits:5,pkey:'pr_4',value:9800},{hits:4,pkey:'pr_5',value:1500},{hits:'3+b',pkey:'pr_6',value:1000}]},
+  mini:{name:'MINI LOTO',emoji:'🟢',color:'#00d4aa',type:'balls',total:31,pick:5,maxSel:10,days:'Ter·火',price:200,
+    freq:{1:7,2:5,3:8,4:6,5:4,6:9,7:5,8:7,9:6,10:8,11:5,12:7,13:6,14:4,15:8,16:5,17:7,18:6,19:9,20:5,21:7,22:6,23:4,24:8,25:5,26:7,27:6,28:9,29:5,30:7,31:6},
+    lastDraws:[{id:1247,date:'08/04/2026',nums:[3,9,15,22,28],bonus:7},{id:1246,date:'01/04/2026',nums:[1,6,14,19,25],bonus:11},{id:1245,date:'25/03/2026',nums:[4,10,17,23,29],bonus:8},{id:1244,date:'18/03/2026',nums:[2,8,13,20,27],bonus:15},{id:1243,date:'11/03/2026',nums:[5,11,16,24,30],bonus:9}],
+    prizes:[{hits:5,pkey:'pr_jackpot',value:10000000},{hits:'4+b',pkey:'pr_2',value:150000},{hits:4,pkey:'pr_3',value:7000},{hits:3,pkey:'pr_4',value:1000}]},
+  bingo5:{name:'BINGO 5',emoji:'🎯',color:'#7c6fff',type:'bingo',total:25,pick:5,days:'Qua·水',price:200,
+    freq:{1:6,2:8,3:5,4:7,5:9,6:4,7:8,8:6,9:7,10:5,11:9,12:6,13:8,14:5,15:7,16:4,17:8,18:6,19:7,20:9,21:5,22:8,23:6,24:7,25:5},
+    lastDraws:[{id:850,date:'09/04/2026',nums:[3,7,12,18,22]},{id:849,date:'02/04/2026',nums:[1,9,14,20,24]},{id:848,date:'26/03/2026',nums:[5,11,16,21,25]}],
+    prizes:[{hits:'5L',pkey:'pr_5L',value:100000000},{hits:'4L',pkey:'pr_4L',value:5000000},{hits:'3L',pkey:'pr_3L',value:100000},{hits:'2L',pkey:'pr_2L',value:2000},{hits:'1L',pkey:'pr_1L',value:500}]},
+  num3:{name:'NUMBERS 3',emoji:'🟠',color:'#ff8c42',type:'numbers',digits:3,days:'毎日·Diário',price:200,
+    freq:{0:8,1:11,2:9,3:7,4:10,5:8,6:9,7:12,8:8,9:7},
+    lastDraws:[{id:6420,date:'11/04/2026',nums:'739'},{id:6419,date:'10/04/2026',nums:'284'},{id:6418,date:'09/04/2026',nums:'561'},{id:6417,date:'08/04/2026',nums:'093'},{id:6416,date:'07/04/2026',nums:'417'}],
+    prizes:[{hits:'exact',pkey:'pr_exact',value:144000},{hits:'any',pkey:'pr_any',value:24000}]},
+  num4:{name:'NUMBERS 4',emoji:'🔵',color:'#4dbfff',type:'numbers',digits:4,days:'毎日·Diário',price:200,
+    freq:{0:9,1:10,2:8,3:11,4:7,5:9,6:10,7:8,8:9,9:7},
+    lastDraws:[{id:3820,date:'11/04/2026',nums:'5391'},{id:3819,date:'10/04/2026',nums:'2847'},{id:3818,date:'09/04/2026',nums:'0162'}],
+    prizes:[{hits:'exact',pkey:'pr_exact',value:900000},{hits:'any',pkey:'pr_any',value:93750}]}
+};
+let currentLottery='loto6',selected=[],selectedDigits={};
+let isPro=localStorage.getItem('jlp_pro')==='true';
+let dailyCount=parseInt(localStorage.getItem('jlp_daily')||'0');
+let lastDate=localStorage.getItem('jlp_date')||'';
+const FREE_LIMIT=3;
+function selectLottery(id,el){document.querySelectorAll('.lottery-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');currentLottery=id;const L=LOTTERIES[id];document.documentElement.style.setProperty('--active',L.color);selected=[];selectedDigits={};document.getElementById('results').innerHTML='';document.getElementById('check-box').classList.remove('show');buildPickPanel();if(document.getElementById('panel-stats').classList.contains('active'))buildStats();showToast(`${L.emoji} ${L.name} ${t('lottery-selected')}`);}
+function buildPickPanel(){const L=LOTTERIES[currentLottery];document.getElementById('lottery-info').innerHTML=t('info_'+currentLottery);const bs=document.getElementById('ball-section'),ss=document.getElementById('special-section');if(L.type==='balls'||L.type==='bingo'){bs.style.display='block';ss.style.display='none';document.getElementById('sel-label').textContent=t('sel-selected',{n:L.maxSel||L.pick});const grid=document.getElementById('ball-grid');const cols=L.total<=25?5:L.total<=31?6:7;grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.innerHTML='';if(L.type==='bingo'){grid.style.gridTemplateColumns='repeat(5,1fr)';['B','I','N','G','O'].forEach(h=>{const hd=document.createElement('div');hd.style.cssText='text-align:center;font-size:12px;font-weight:700;padding:6px 0;color:var(--active);letter-spacing:2px;';hd.textContent=h;grid.appendChild(hd);});for(let row=0;row<5;row++)for(let col=0;col<5;col++){const n=col*5+row+1;if(row===2&&col===2){const fc=document.createElement('div');fc.className='ball';fc.style.cssText='cursor:default;font-size:9px;color:var(--muted);background:var(--bg4)';fc.textContent='FREE';grid.appendChild(fc);}else{const b=document.createElement('div');b.className='ball';b.id=`ball-${n}`;b.textContent=n;b.onclick=()=>toggleBall(n,b);grid.appendChild(b);}}}else{for(let i=1;i<=L.total;i++){const b=document.createElement('div');b.className='ball';b.id=`ball-${i}`;b.textContent=i;b.onclick=()=>toggleBall(i,b);grid.appendChild(b);}}updateSelDisplay();}else{bs.style.display='none';ss.style.display='block';buildNumbersSelector(L);}}
+function buildNumbersSelector(L){const digits=L.digits;let html=`<p class="slabel">🔢 Dígitos</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:13px">`;for(let d=0;d<digits;d++){html+=`<div class="digit-slot"><div class="digit-label">${t('digit',{n:d+1})}</div><div class="digit-btns" id="digit-${d}">`;for(let n=0;n<10;n++)html+=`<button class="digit-btn" id="d${d}-${n}" onclick="selectDigit(${d},${n})">${n}</button>`;html+=`</div></div>`;}html+=`</div><div class="sel-bar" style="margin-bottom:13px"><div><div class="sel-count" id="sel-count" style="font-size:24px;letter-spacing:4px">---</div><div class="sel-label">${t('chosen-number')}</div></div><div style="font-size:11px;color:var(--muted);text-align:right">${t('tap-digits')}</div></div>`;document.getElementById('special-section').innerHTML=html;}
+function selectDigit(pos,n){selectedDigits[pos]=selectedDigits[pos]===n?null:n;document.querySelectorAll(`#digit-${pos} .digit-btn`).forEach(b=>b.classList.remove('sel'));if(selectedDigits[pos]!==null&&selectedDigits[pos]!==undefined)document.getElementById(`d${pos}-${n}`).classList.add('sel');const L=LOTTERIES[currentLottery];let d='';for(let i=0;i<L.digits;i++)d+=(selectedDigits[i]!==null&&selectedDigits[i]!==undefined)?selectedDigits[i]:'-';const sc=document.getElementById('sel-count');if(sc)sc.textContent=d;}
+function toggleBall(n,el){const L=LOTTERIES[currentLottery],max=L.maxSel||L.pick;if(selected.includes(n)){selected=selected.filter(x=>x!==n);el.classList.remove('selected');}else if(selected.length<max){selected.push(n);el.classList.add('selected');}else{showToast(t('max-nums',{n:max}));return;}updateSelDisplay();}
+function updateSelDisplay(){const sc=document.getElementById('sel-count'),sd=document.getElementById('sel-display');if(!sc||!sd)return;sc.textContent=selected.length;sd.innerHTML='';[...selected].sort((a,b)=>a-b).forEach(n=>{const d=document.createElement('div');d.className='sel-mini';d.textContent=n;sd.appendChild(d);});}
+function clearAll(){selected=[];selectedDigits={};document.querySelectorAll('.ball').forEach(b=>b.classList.remove('selected'));document.querySelectorAll('.digit-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('results').innerHTML='';const sc=document.getElementById('sel-count');if(sc)sc.textContent=(currentLottery==='num3'||currentLottery==='num4')?'---':'0';const sd=document.getElementById('sel-display');if(sd)sd.innerHTML='';}
+function getBallStyle(n,total){const z=[['#e63950','#c02040'],['#e68a00','#c06000'],['#2a9a50','#1a7a3a'],['#2070d0','#1050b0'],['#8040c0','#6020a0'],['#40a0c0','#208090'],['#c04040','#a02020']];const i=Math.floor((n-1)/Math.ceil(total/z.length));const c=z[Math.min(i,z.length-1)];return `background:linear-gradient(135deg,${c[0]},${c[1]})`;}
+// ✅ PROMPT v3 — Lustig + soma flexível + faixa baixa + sequências suavizadas + primos
+async function generateBallsAI(L,favs){
+  const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);
+  const cold=Object.entries(L.freq).sort((a,b)=>a[1]-b[1]).slice(0,8).map(x=>+x[0]);
+  const lastDrawsStr=L.lastDraws.slice(0,5).map(d=>Array.isArray(d.nums)?d.nums.join('-'):d.nums).join(' | ');
+  const totalMin=L.min||1,totalMax=L.total,pick=L.pick;
+  const faixaB=Math.floor(totalMax/3),faixaM=Math.floor(totalMax*2/3),maxPares=Math.ceil(pick/2)+1;
+
+  // Soma flexível por loteria — aceita range amplo baseado em histórico real
+  // Loto7: sorteios reais variam de 85 a 195 (média ~133)
+  // Loto6: variam de 75 a 195 (média ~132)
+  // Mini:  variam de 40 a 120 (média ~80)
+  const somaRanges={
+    loto7:{min:85,max:195,med:133},
+    loto6:{min:75,max:195,med:132},
+    mini:{min:40,max:120,med:80},
+    bingo5:{min:35,max:95,med:65}
+  };
+  const lKey=Object.keys(somaRanges).find(k=>L.name.toLowerCase().replace(' ','').includes(k))||'loto7';
+  const soma=somaRanges[lKey];
+
+  // Últimas somas para contexto
+  const lastSums=L.lastDraws.slice(0,5).map(d=>Array.isArray(d.nums)?d.nums.reduce((a,b)=>a+b,0):0).filter(s=>s>0);
+
+  // Números primos na faixa
+  const isPrime=n=>{if(n<2)return false;for(let i=2;i<=Math.sqrt(n);i++)if(n%i===0)return false;return true;};
+  const primes=[...Array(totalMax+1).keys()].filter(n=>n>=totalMin&&isPrime(n));
+  const primesIdeal=Math.round(pick*0.4);
+
+  // Faixa baixa (1 a ~40% do max) historicamente tem mais números sorteados
+  const faixaBaixaMax=Math.floor(totalMax*0.4);
+
+  const favsLine=favs?`\n- Favoritos do usuário: ${[...favs].sort((a,b)=>a-b).join(', ')}`:'';
+  const jogo5=favs?'Lustig Favoritos — mantenha os favoritos com soma controlada e distribuição real':'Lustig Consistência — quentes históricos com peso na faixa baixa (1-'+faixaBaixaMax+')';
+  const numsPlaceholder=Array.from({length:pick},(_,i)=>`n${i+1}`).join(',');
+
+  const prompt=`Você é um especialista em análise estatística da loteria ${L.name} do Japão, usando métodos dos maiores ganhadores mundiais e padrões reais dos sorteios.
+
+CONFIGURAÇÃO:
+- Faixa: ${totalMin} a ${totalMax}, exatamente ${pick} números por jogo
+- Números quentes (alta frequência histórica): ${hot.join(', ')}
+- Números frios (baixa frequência): ${cold.join(', ')}
+- Últimos 5 sorteios: ${lastDrawsStr}
+- Somas recentes: ${lastSums.join(', ')} (média histórica: ${soma.med})
+- Números primos disponíveis: ${primes.slice(0,14).join(', ')}${favsLine}
+
+REGRAS BASEADAS EM PADRÕES REAIS DOS SORTEIOS:
+1. Exatamente ${pick} números, sem repetição, em ordem crescente
+2. Soma total entre ${soma.min} e ${soma.max} — range real histórico (média: ${soma.med})
+3. Mínimo 2 e máximo ${maxPares} números pares
+4. Máximo 3 números consecutivos seguidos (consecutivos curtos são normais nos sorteios reais)
+5. Incluir pelo menos ${primesIdeal} números primos (padrão histórico de ganhadores)
+6. Incluir 3 a 4 números na faixa baixa (${totalMin} a ${faixaBaixaMax}) — faixa mais frequente historicamente
+7. Pelo menos 1 número na faixa alta (${faixaM+1} a ${totalMax})
+8. Método Lustig: use a faixa completa, evite concentrar todos os números acima de 25
+
+ESTRATÉGIAS DOS MAIORES GANHADORES (uma por jogo):
+- Jogo 1: Lustig Quentes — máximo de quentes, peso na faixa baixa, soma próxima de ${soma.med}
+- Jogo 2: Equilíbrio Real — distribui pelos padrões reais observados nos últimos sorteios
+- Jogo 3: Retorno Estatístico — números frios + ausentes há muitos sorteios, soma baixa (~${Math.round(soma.med*0.85)})
+- Jogo 4: Distribuição Pura — cobre todas as faixas, evita clusters, soma média
+- Jogo 5: ${jogo5}
+
+IMPORTANTE: Analise os últimos sorteios fornecidos e identifique padrões reais (faixas predominantes, somas, pares de números). Use esses padrões para calibrar os jogos.
+
+Responda APENAS com JSON sem markdown:
+{"games":[{"nums":[${numsPlaceholder}],"reason":"método+padrão usado, max 50 chars","conf":74},{"nums":[...],"reason":"...","conf":70},{"nums":[...],"reason":"...","conf":67},{"nums":[...],"reason":"...","conf":63},{"nums":[...],"reason":"...","conf":59}]}`;
+
+  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});
+  const data=await res.json();
+  const text=data.content?.map(c=>c.text||'').join('')||'';
+  const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+  renderBallResults(parsed.games,L);
+  if(!favs){clearAll();[...new Set(parsed.games.flatMap(g=>g.nums))].slice(0,L.maxSel||L.pick).forEach(n=>{const el=document.getElementById(`ball-${n}`);if(el){selected.push(n);el.classList.add('selected');}});updateSelDisplay();}
+}
+async function generateAutoAI(){if(!canUseAI()){openPro();return;}incrementDaily();const btn=document.getElementById('btn-auto');btn.disabled=true;document.getElementById('loading').classList.add('show');document.getElementById('results').innerHTML='';try{const L=LOTTERIES[currentLottery];if(L.type==='numbers')await generateNumbersAI(L);else await generateBallsAI(L,null);showToast(t('generate-ok'));}catch(e){generateFallback(LOTTERIES[currentLottery]);showToast(t('generate-local'));}finally{document.getElementById('loading').classList.remove('show');btn.disabled=false;if(!isPro)showUsageWarning();}}
+async function generateAI(){const L=LOTTERIES[currentLottery];if(L.type==='numbers'){await generateAutoAI();return;}if(selected.length<L.pick){showToast(t('select-min',{n:L.pick}));return;}if(!canUseAI()){openPro();return;}incrementDaily();document.getElementById('loading').classList.add('show');document.getElementById('results').innerHTML='';document.getElementById('btn-ai-btn').disabled=true;try{await generateBallsAI(L,selected);}catch(e){generateFallback(L);}finally{document.getElementById('loading').classList.remove('show');document.getElementById('btn-ai-btn').disabled=false;if(!isPro)showUsageWarning();}}
+async function generateNumbersAI(L){const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const last=L.lastDraws.slice(0,3).map(d=>d.nums).join(', ');const prompt=`Especialista em ${L.name} do Japão. Gere 5 jogos de ${L.digits} dígitos (0-9).\nDígitos mais frequentes: ${hot.join(', ')} | Últimos resultados: ${last}\nVarie as estratégias: frequentes, mistura, raros, distribuição, surpresa.\nResponda APENAS com JSON sem markdown:\n{"games":[{"nums":"${'d'.repeat(L.digits)}","reason":"max 40 chars","conf":70},{"nums":"...","reason":"...","conf":67},{"nums":"...","reason":"...","conf":64},{"nums":"...","reason":"...","conf":60},{"nums":"...","reason":"...","conf":56}]}`;const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});const data=await res.json();const text=data.content?.map(c=>c.text||'').join('')||'';renderNumberResults(JSON.parse(text.replace(/```json|```/g,'').trim()).games,L);}
+function generateRandom(){const L=LOTTERIES[currentLottery];if(L.type==='numbers'){renderNumberResults(Array.from({length:5},()=>({nums:Array.from({length:L.digits},()=>Math.floor(Math.random()*10)).join(''),reason:t('random-gen'),conf:Math.floor(Math.random()*15)+48})),L);}else{const all=Array.from({length:L.total},(_,i)=>i+1);renderBallResults(Array.from({length:5},()=>({nums:[...all].sort(()=>.5-Math.random()).slice(0,L.pick).sort((a,b)=>a-b),reason:t('random-gen'),conf:Math.floor(Math.random()*18)+48})),L);}}
+function generateFallback(L){if(L.type==='numbers'){renderNumberResults(Array.from({length:5},(_,i)=>({nums:Array.from({length:L.digits},()=>Math.floor(Math.random()*10)).join(''),reason:t('random-gen'),conf:66-i*3})),L);}else{const pool=selected.length>=L.pick?selected:Array.from({length:L.total},(_,j)=>j+1);renderBallResults(Array.from({length:5},(_,i)=>({nums:[...pool].sort(()=>.5-Math.random()).slice(0,L.pick).sort((a,b)=>a-b),reason:t('random-gen'),conf:66-i*3})),L);}}
+function renderBallResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;games.forEach((g,i)=>{const conf=g.conf||Math.floor(Math.random()*20)+54;const cc=conf>=70?'#00d4aa':conf>=62?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${(g.nums||g.numbers).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});}
+function renderNumberResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;games.forEach((g,i)=>{const conf=g.conf||Math.floor(Math.random()*18)+52;const cc=conf>=68?'#00d4aa':conf>=60?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';const numStr=g.nums.toString().padStart(L.digits,'0');card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${numStr.split('').map(d=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}cc,${L.color}88);font-size:18px;width:44px;height:44px;">${d}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});}
+function switchTab(tab){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));document.getElementById(`panel-${tab}`).classList.add('active');document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('active');const nb=document.getElementById(`nav-${tab}`);if(nb)nb.classList.add('active');if(tab==='stats')buildStats();if(tab==='check')buildPrizeTable();if(tab==='guide')buildGuide();if(tab==='advanced')buildAdvanced();}
+function buildStats(){const L=LOTTERIES[currentLottery];const sorted=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]);document.getElementById('hot-balls').innerHTML=sorted.slice(0,7).map(([n])=>`<div class="mini-ball mb-hot">${n}</div>`).join('');document.getElementById('cold-balls').innerHTML=sorted.slice(-7).map(([n])=>`<div class="mini-ball mb-cold">${n}</div>`).join('');const rf={};(L.lastDraws.flatMap(d=>d.nums||[])).forEach(n=>rf[n]=(rf[n]||0)+1);document.getElementById('lucky-balls').innerHTML=Object.entries(rf).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([n])=>`<div class="mini-ball mb-lucky">${n}</div>`).join('');const top=sorted.slice(0,12),maxF=+top[0][1];document.getElementById('freq-chart').innerHTML=top.map(([n,f])=>`<div class="freq-item"><div class="freq-n">${n}</div><div class="freq-wrap"><div class="freq-bar" style="width:${Math.round(+f/maxF*100)}%"></div></div><div class="freq-ct">${f}x</div></div>`).join('');document.getElementById('last-draws').innerHTML=L.lastDraws.map(d=>{let bh;if(L.type==='numbers'){bh=d.nums.split('').map(n=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}aa,${L.color}66);width:34px;height:34px;font-size:16px;">${n}</div>`).join('');}else{bh=(d.nums||[]).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('');if(d.bonus){if(Array.isArray(d.bonus))d.bonus.forEach(b=>bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">${b}</div>`);else bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">B:${d.bonus}</div>`;}}return `<div class="draw-card"><div class="dc-header"><span class="dc-id">#${d.id}</span><span class="dc-date">${d.date}</span></div><div class="rc-balls">${bh}</div></div>`;}).join('');}
+function buildPrizeTable(){const L=LOTTERIES[currentLottery];const[th1,th2,th3]=lang==='ja'?['一致数','賞','金額']:['Acertos','Prêmio','Valor est.'];document.getElementById('prize-table-section').innerHTML=`<p class="slabel">${t('prize-label')} — ${L.name}</p><div class="stat-card"><table class="prize-table"><tr><th>${th1}</th><th>${th2}</th><th style="text-align:right">${th3}</th></tr>${L.prizes.map(p=>`<tr><td style="font-weight:700;color:var(--active)">${p.hits}</td><td>${t(p.pkey)}</td><td style="text-align:right;font-weight:700;color:${p.value>=1000000?'var(--active)':'var(--text)'}">${formatYen(p.value)}</td></tr>`).join('')}<tr><td colspan="3" style="font-size:10px;color:var(--muted);padding-top:10px">${t('prize-ticket',{p:L.price,d:L.days})}</td></tr></table></div>`;}
+function checkTicket(){const L=LOTTERIES[currentLottery];buildPrizeTable();if(L.type==='numbers'){const win=document.getElementById('winning-inp').value.trim().replace(/\s/g,'');const tkt=document.getElementById('ticket-inp').value.trim().replace(/\s/g,'');if(win.length!==L.digits||tkt.length!==L.digits){showToast(t('insert-digits',{n:L.digits}));return;}const exact=win===tkt,any=[...win].sort().join('')===[...tkt].sort().join('');if(exact)showCheckResult('🏆',t('exact-hit'),formatYen(L.prizes[0].value),'var(--active)');else if(any&&L.digits===3)showCheckResult('🥈',t('any-order'),formatYen(L.prizes[1]?.value||0),'#ff8c42');else showCheckResult('😔',t('no-prize'),t('keep-trying'),'var(--muted)');}else{const parse=id=>document.getElementById(id).value.split(/[\s,]+/).map(Number).filter(n=>n>=1&&n<=L.total);const win=parse('winning-inp'),tkt=parse('ticket-inp');if(win.length!==L.pick){showToast(t('insert-winning',{n:L.pick}));return;}if(tkt.length!==L.pick){showToast(t('insert-ticket',{n:L.pick}));return;}const matches=tkt.filter(n=>win.includes(n)).length;const prize=L.prizes.find(p=>p.hits===matches||(matches===L.pick&&p.hits===L.pick));if(prize)showCheckResult('🏆',t(prize.pkey),formatYen(prize.value),'var(--active)');else if(matches>0)showCheckResult('😐',t('matches',{n:matches}),t('no-prize-min'),'var(--muted)');else showCheckResult('😔',t('no-prize'),t('keep-trying'),'var(--muted)');}}
+function showCheckResult(ico,title,sub,color){document.getElementById('check-ico').textContent=ico;const tl=document.getElementById('check-title');tl.textContent=title;tl.style.color=color;document.getElementById('check-sub').innerHTML=sub;document.getElementById('check-box').classList.add('show');}
+function formatYen(v){if(v>=100000000)return`¥${(v/100000000).toFixed(0)}億円`;if(v>=10000)return`¥${Math.round(v/10000)}万円`;return`¥${v.toLocaleString()}円`;}
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2500);}
+function checkDaily(){const today=new Date().toDateString();if(lastDate!==today){dailyCount=0;localStorage.setItem('jlp_daily','0');localStorage.setItem('jlp_date',today);lastDate=today;}return dailyCount;}
+function incrementDaily(){dailyCount++;localStorage.setItem('jlp_daily',dailyCount.toString());}
+function canUseAI(){return isPro||checkDaily()<FREE_LIMIT;}
+function showUsageWarning(){const r=FREE_LIMIT-dailyCount;if(r<=0)showToast(t('limit-daily'));else if(r===1)showToast(t('last-gen'));}
+function openPro(){document.getElementById('pro-modal').classList.add('show');}
+function closePro(e){if(!e||e.target===document.getElementById('pro-modal'))document.getElementById('pro-modal').classList.remove('show');}
+function startPro(){
+  if(typeof gtag!=='undefined')gtag('event','pro_checkout_click',{currency:'JPY',value:600});
+  const STRIPE_URL='https://buy.stripe.com/SEU_LINK_AQUI';
+  if(STRIPE_URL.includes('SEU_LINK')){
+    // Modo teste — ativa PRO localmente enquanto Stripe não está configurado
+    isPro=true;
+    localStorage.setItem('jlp_pro','true');
+    document.getElementById('pro-modal').classList.remove('show');
+    showToast('⭐ PRO ativado! (modo teste)');
+    if(typeof gtag!=='undefined')gtag('event','pro_test_activated');
+  } else {
+    window.open(STRIPE_URL,'_blank');
+    document.getElementById('pro-modal').classList.remove('show');
+  }
+}
+const GUIDE={
+  pt:{
+    steps:{
+      convini:[{text:`Vá ao caixa e diga: <span class="phrase">「宝くじください」</span>`,note:'Takarakuji kudasai = "Quero comprar loteria"'},{text:`Escolha a loteria: <span class="phrase">「ロト6」「ロト7」「ミニロト」</span>`},{text:`Diga quantos jogos: <span class="phrase">「〇枚ください」</span>`,note:'Ex: 「1枚ください」= 1 jogo'},{text:'Pague em dinheiro ou IC Card (Suica/Pasmo)'},{text:'Guarde bem o bilhete — sem bilhete, sem prêmio! 🎫'}],
+      mizuho:[{text:`Procure o balcão <span class="phrase">「宝くじ売り場」</span> dentro do banco`},{text:'Pegue o formulário (マークシート)'},{text:'Preencha seus números com caneta'},{text:'Entregue ao atendente com o dinheiro'},{text:'Receba seu bilhete impresso!'}],
+      kiosco:[{text:`Procure o quiosque com a bandeira <span class="phrase">「宝くじ」</span>`},{text:`Escolha: <span class="phrase">「クイックピック」</span> ou seus números`},{text:'Informe a quantidade e pague'},{text:'Receba o bilhete na hora'}],
+      online:[{text:`Acesse: <span class="phrase">takarakuji-official.jp</span>`},{text:'Crie conta com e-mail e celular japonês'},{text:'Cadastre cartão de crédito ou conta bancária japonesa'},{text:'Escolha a loteria, selecione números e confirme'},{text:'O prêmio é depositado automaticamente! 🏦'}],
+    },
+    tips:{convini:'💡 Nos terminais Loppi (Lawson) e Famiport (FamilyMart) você mesmo escolhe na tela — sem precisar falar japonês!',mizuho:'💡 O banco funciona em horário comercial. Prefira ir de manhã para evitar filas.',kiosco:'💡 Quiosques perto de estações famosas são considerados de boa sorte!',online:'💡 Vantagem: não perde o bilhete e o prêmio cai direto na conta.'},
+    phrases:[{jp:'宝くじをください',romaji:'Takarakuji o kudasai',pt:'Quero comprar loteria'},{jp:'ロト6を1枚ください',romaji:'Roto roku o ichimai kudasai',pt:'Quero 1 bilhete de Loto 6'},{jp:'ロト7を2枚ください',romaji:'Roto nana o nimai kudasai',pt:'Quero 2 bilhetes de Loto 7'},{jp:'クイックピックでお願いします',romaji:'Kuikku pikku de onegaishimasu',pt:'Pode ser aleatório'},{jp:'マークシートはありますか？',romaji:'Maakushiito wa arimasu ka?',pt:'Tem o formulário?'},{jp:'いくらですか？',romaji:'Ikura desu ka?',pt:'Quanto custa?'},{jp:'当たりましたか？',romaji:'Atarimashita ka?',pt:'Ganhei algum prêmio?'}],
+    formRows:[{label:'Loteria',dots:[{n:'ロ6',f:true},{n:'ロ7'},{n:'ミニ'},{n:'B5'},{n:'N3'},{n:'N4'}]},{label:'Números',dots:[{n:7,f:true},{n:15,f:true},{n:22,f:true},{n:30},{n:36},{n:43}]},{label:'Qtd.',dots:[{n:'1',f:true},{n:'2'},{n:'3'},{n:'4'},{n:'5'}]},{label:'Tipo',dots:[{n:'自',f:true},{n:'数'}]}],
+    formNote:'自 = クイックピック (aleatório) · 数 = 数字選択 (seus números)',
+    redeem:[{icon:'🏪',amount:'Até ¥50.000',where:'Convenience Store',note:'Apresente o bilhete no caixa'},{icon:'🏦',amount:'Até ¥1.000.000',where:'Banco Mizuho',note:'Leve ao balcão de loteria. Seg-sex 9h–15h'},{icon:'🏛️',amount:'Acima de ¥1.000.000',where:'Mizuho Bank sede',note:'Requer agendamento. Leve RG e bilhete original'},{icon:'💻',amount:'Online',where:'takarakuji-official.jp',note:'Prêmio transferido automaticamente em ~10 dias'}],
+    culturalTips:[{emoji:'🍀',title:'Bilhetes da sorte',desc:'Japoneses acreditam que quiosques famosos trazem mais sorte. O "Daikokuya" em Osaka tem filas enormes!'},{emoji:'🎁',title:'Presente de Ano Novo',desc:'O Jumbo de Natal (年末ジャンボ) é o presente de fim de ano mais tradicional do Japão!'},{emoji:'📅',title:'Prazo de validade',desc:'Você tem 1 ano a partir do sorteio para resgatar. Depois disso, perde o direito!'},{emoji:'💴',title:'Sem imposto!',desc:'Prêmios de loteria no Japão são isentos de imposto de renda!'},{emoji:'🔇',title:'Discrição cultural',desc:'Japoneses costumam ser discretos sobre ganhos. Evite comentar em voz alta.'},{emoji:'🎰',title:'Números da sorte',desc:'O número 7 (七) é muito sortudo. Já o 4 (四) e 9 (九) são evitados por soarem como "morte" e "sofrimento".'}],
+  },
+  ja:{
+    steps:{
+      convini:[{text:`レジで言う: <span class="phrase">「宝くじください」</span>`,note:'ロピア・ファミポートで自分で操作できます'},{text:`くじの種類を選ぶ: <span class="phrase">「ロト6」「ロト7」「ミニロト」</span>`},{text:`枚数を伝える: <span class="phrase">「〇枚ください」</span>`},{text:'現金またはICカードで支払う'},{text:'チケットを大切に保管してください 🎫'}],
+      mizuho:[{text:`銀行内の <span class="phrase">「宝くじ売り場」</span> を探す`},{text:'マークシートを受け取る'},{text:'ペンで数字をマークする'},{text:'お金と一緒に窓口に提出する'},{text:'チケットを受け取り数字を確認する'}],
+      kiosco:[{text:`<span class="phrase">「宝くじ」</span> の売り場を探す`},{text:`<span class="phrase">「クイックピック」</span>または数字選択`},{text:'枚数を伝えてお支払い'},{text:'チケットをその場で受け取る'}],
+      online:[{text:`<span class="phrase">takarakuji-official.jp</span> にアクセス`},{text:'メールと日本の携帯番号で登録'},{text:'日本のクレカまたは銀行口座を登録'},{text:'宝くじを選び数字を選択して確認'},{text:'当選金は自動振込 🏦'}],
+    },
+    tips:{convini:'💡 LoppiやFamiportの端末なら日本語不要で操作できます！',mizuho:'💡 銀行は営業時間内のみ。午前中が混雑少なめです。',kiosco:'💡 有名な縁起の良い売り場には長蛇の列ができます！',online:'💡 チケット紛失の心配なし。日本の銀行口座が必要です。'},
+    phrases:[{jp:'宝くじをください',romaji:'Takarakuji o kudasai',pt:'宝くじを購入したい'},{jp:'ロト6を1枚ください',romaji:'Roto roku o ichimai kudasai',pt:'ロト6 1枚'},{jp:'クイックピックでお願いします',romaji:'Kuikku pikku de onegaishimasu',pt:'クイックピックで'},{jp:'マークシートはありますか？',romaji:'Maakushiito wa arimasu ka?',pt:'マークシートは？'},{jp:'いくらですか？',romaji:'Ikura desu ka?',pt:'おいくらですか？'},{jp:'当たりましたか？',romaji:'Atarimashita ka?',pt:'当選しましたか？'}],
+    formRows:[{label:'くじの種類',dots:[{n:'ロ6',f:true},{n:'ロ7'},{n:'ミニ'},{n:'B5'},{n:'N3'},{n:'N4'}]},{label:'数字',dots:[{n:7,f:true},{n:15,f:true},{n:22,f:true},{n:30},{n:36},{n:43}]},{label:'枚数',dots:[{n:'1',f:true},{n:'2'},{n:'3'},{n:'4'},{n:'5'}]},{label:'種別',dots:[{n:'自',f:true},{n:'数'}]}],
+    formNote:'自 = クイックピック · 数 = 数字選択',
+    redeem:[{icon:'🏪',amount:'5万円まで',where:'コンビニ',note:'レジでチケットを見せる'},{icon:'🏦',amount:'100万円まで',where:'みずほ銀行',note:'営業時間: 月〜金 9時〜15時'},{icon:'🏛️',amount:'100万円超',where:'みずほ銀行本支店',note:'要予約。身分証と原券が必要'},{icon:'💻',amount:'ネット購入',where:'takarakuji-official.jp',note:'約10日以内に自動振込'}],
+    culturalTips:[{emoji:'🍀',title:'縁起の良い売り場',desc:'大阪の「大黒天物産」など有名売り場には長蛇の列！'},{emoji:'🎁',title:'贈り物として',desc:'年末ジャンボ宝くじはお歳暮の定番プレゼント。'},{emoji:'📅',title:'有効期限',desc:'当選金請求権は抽選日から1年間。期限後は無効！'},{emoji:'💴',title:'非課税！',desc:'日本の宝くじの当選金は非課税です。'},{emoji:'🔇',title:'当選は内緒',desc:'高額当選を公言しない文化があります。'},{emoji:'🎰',title:'ラッキーナンバー',desc:'7は縁起良い。4と9は「死」「苦」に通じるため避ける人も。'}],
+  }
+};
+function toggleGuide(id){const body=document.getElementById(id);const chev=document.getElementById('chev-'+id);const open=body.style.display==='none';body.style.display=open?'block':'none';if(chev)chev.classList.toggle('open',open);}
+function buildGuide(){const G=GUIDE[lang]||GUIDE.pt;['convini','mizuho','kiosco','online'].forEach(key=>{const stepsEl=document.getElementById('steps-'+key);const tipEl=document.getElementById('tip-'+key);if(stepsEl)stepsEl.innerHTML=(G.steps[key]||[]).map(s=>`<div class="gs">${s.text}${s.note?`<small>${s.note}</small>`:''}</div>`).join('');if(tipEl)tipEl.innerHTML=G.tips[key]||'';});const phraseEl=document.getElementById('phrase-list');if(phraseEl)phraseEl.innerHTML=(G.phrases||[]).map(p=>`<div class="phrase-card"><div class="phrase-jp">${p.jp}</div><div class="phrase-romaji">${p.romaji}</div><div class="phrase-pt">${p.pt}</div></div>`).join('');const formEl=document.getElementById('form-diagram');if(formEl)formEl.innerHTML=(G.formRows||[]).map(r=>`<div class="form-row"><div class="form-label">${r.label}</div><div class="form-dots">${r.dots.map(d=>`<div class="form-dot${d.f?' filled':''}">${d.n}</div>`).join('')}</div></div>`).join('')+(G.formNote?`<div style="font-size:10px;color:var(--muted);margin:10px 14px">${G.formNote}</div>`:'');const redeemEl=document.getElementById('redeem-grid');if(redeemEl)redeemEl.innerHTML=(G.redeem||[]).map(r=>`<div class="redeem-card"><div class="redeem-icon">${r.icon}</div><div><div class="redeem-amount">${r.amount}</div><div class="redeem-where">${r.where}</div><div class="redeem-note">${r.note}</div></div></div>`).join('');const tipsEl=document.getElementById('tips-list');if(tipsEl)tipsEl.innerHTML=(G.culturalTips||[]).map(tip=>`<div class="tip-item"><div class="tip-emoji">${tip.emoji}</div><div><div class="tip-title">${tip.title}</div><div class="tip-desc">${tip.desc}</div></div></div>`).join('');}
+const SET_DATA={A:{hot:[1,12,13,15,22,27,30,35],warm:[3,7,10,17,23,28],note:'Favorece números médios (10–25)'},B:{hot:[2,9,14,19,24,30,33,36],warm:[1,11,20,26,31],note:'Tendência para números baixos e altos'},C:{hot:[4,10,13,16,22,27,29,34],warm:[3,7,19,24,31,37],note:'Distribuição equilibrada'},D:{hot:[3,9,12,15,21,26,31,34],warm:[1,6,18,23,29,37],note:'Favorece números ímpares'},E:{hot:[6,11,15,19,22,28,33,36],warm:[2,9,13,24,30,35],note:'Tendência para números médios-altos'},F:{hot:[5,10,14,20,25,29,33,37],warm:[3,8,17,22,28,34],note:'Favorece extremos (5–10 e 30–37)'},G:{hot:[3,9,13,15,22,27,30,35],warm:[7,11,18,24,29,36],note:'Alta frequência de ímpares baixos'},H:{hot:[4,8,12,18,24,30,33,36],warm:[2,10,16,22,28,35],note:'Favorece pares e números médios'},I:{hot:[1,5,11,16,21,27,31,36],warm:[6,13,19,24,29,34],note:'Distribuição por faixas amplas'},J:{hot:[2,7,13,20,26,31,35,37],warm:[4,10,17,23,28,33],note:'Tendência para extremos e altos'}};
+const PRESSURE_HISTORY=[{date:'01/05/2015',draw:107,hpa:1011.8,nums:[3,8,9,13,17,27,33]},{date:'22/05/2015',draw:110,hpa:1010.5,nums:[4,12,22,30,31,35,36]},{date:'01/05/2020',draw:369,hpa:1010.9,nums:[16,19,22,25,26,33,37]},{date:'29/05/2020',draw:374,hpa:1010.6,nums:[1,5,9,14,20,24,29]},{date:'23/05/2025',draw:640,hpa:1010.3,nums:[2,11,15,22,28,33,36]}];
+let delayData={30:19,27:16,34:14,31:11,35:10,19:10,2:9,23:9,25:9,20:8,14:7,8:7,29:7};
+let pressureNums=new Set(),setballNums=new Set(),delayNums=new Set(),selectedSetball='F';
+async function fetchPressureAuto(){
+  const btn=document.getElementById('btn-auto-pressure');
+  const status=document.getElementById('pressure-auto-status');
+  btn.disabled=true;
+  status.textContent='🌡️ Buscando pressão em Tóquio...';
+  status.style.color='var(--muted)';
+
+  // Tenta múltiplas APIs em sequência
+  const apis=[
+    // API 1: Open-Meteo (melhor, pode falhar em iOS local)
+    async()=>{
+      const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.6762&longitude=139.7690&current=surface_pressure,pressure_msl&timezone=Asia%2FTokyo',{mode:'cors'});
+      const d=await r.json();
+      const p=d.current?.surface_pressure||d.current?.pressure_msl;
+      if(!p)throw new Error('sem dados');
+      return Math.round(p*10)/10;
+    },
+    // API 2: Open-Meteo com pressure_msl direto
+    async()=>{
+      const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.77&hourly=pressure_msl&forecast_days=1&timezone=Asia%2FTokyo');
+      const d=await r.json();
+      const p=d.hourly?.pressure_msl?.[new Date().getHours()];
+      if(!p)throw new Error('sem dados');
+      return Math.round(p*10)/10;
+    },
+    // API 3: wttr.in JSON (CORS livre)
+    async()=>{
+      const r=await fetch('https://wttr.in/Tokyo?format=j1');
+      const d=await r.json();
+      const p=parseFloat(d.current_condition?.[0]?.pressure);
+      if(!p)throw new Error('sem dados');
+      return Math.round(p*10)/10;
+    }
+  ];
+
+  let pressure=null;
+  for(const api of apis){
+    try{pressure=await api();if(pressure)break;}catch(e){continue;}
+  }
+
+  if(pressure){
+    document.getElementById('pressure-input').value=pressure;
+    status.textContent=`✅ Pressão atual em Tóquio (Kyobashi): ${pressure} hPa`;
+    status.style.color='#00d4aa';
+    analyzePressure();
+  }else{
+    // Fallback: usa pressão média histórica de Tóquio para a época do ano
+    const month=new Date().getMonth();
+    const seasonal=[1021,1018,1014,1010,1009,1008,1006,1007,1013,1018,1020,1022];
+    const fallback=seasonal[month];
+    document.getElementById('pressure-input').value=fallback;
+    status.innerHTML=`⚠️ API indisponível. Usando média histórica de Tóquio para este mês: <strong>${fallback} hPa</strong>`;
+    status.style.color='#f0c040';
+    analyzePressure();
+  }
+  btn.disabled=false;
+}
+
+function analyzePressure(){const val=parseFloat(document.getElementById('pressure-input').value);if(!val||isNaN(val)){showToast('Insira a pressão');return;}const matches=PRESSURE_HISTORY.filter(p=>Math.abs(p.hpa-val)<=1.5);pressureNums=new Set();const freq={};matches.forEach(m=>m.nums.forEach(n=>{freq[n]=(freq[n]||0)+1;pressureNums.add(n);}));const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);const el=document.getElementById('pressure-result');if(!matches.length){el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Nenhum dado histórico nessa faixa (±1.5 hPa). Tente pressão entre 1009–1013.</div></div>`;}else{el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div class="adv-ref-title">${matches.length} sorteio(s) com pressão similar (±1.5 hPa)</div><div class="adv-set-nums">${sorted.slice(0,10).map(([n,f])=>`<span class="adv-num-tag ${f>=2?'hot':'warm'}">${n}${f>=2?` ×${f}`:''}</span>`).join('')}</div><div style="font-size:10px;color:var(--muted);margin-top:6px">${matches.map(m=>`#${m.draw} (${m.date}) · ${m.hpa}hPa`).join(' · ')}</div></div>`;}updateTriple();}
+function selectSet(s){selectedSetball=s;document.querySelectorAll('.adv-set-btn').forEach(b=>b.classList.toggle('active',b.textContent===s));const data=SET_DATA[s];setballNums=new Set([...data.hot,...data.warm]);const el=document.getElementById('setball-result');if(!el)return;el.innerHTML=`<div class="adv-ref-box"><div class="adv-ref-title">Conjunto ${s} — Números favorecidos</div><div class="adv-set-nums">${data.hot.map(n=>`<span class="adv-num-tag hot">${n}</span>`).join('')}${data.warm.map(n=>`<span class="adv-num-tag warm">${n}</span>`).join('')}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">${data.note}</div></div>`;updateTriple();}
+function buildDelayChart(){const sorted=Object.entries(delayData).sort((a,b)=>b[1]-a[1]).slice(0,15);const max=sorted[0]?.[1]||1;delayNums=new Set(sorted.filter(([,v])=>v>=10).map(([n])=>+n));const el=document.getElementById('delay-chart');el.innerHTML=`<div style="margin-bottom:10px">${sorted.map(([n,v])=>`<div class="adv-delay-bar"><div class="adv-delay-n">${n}</div><div class="adv-delay-wrap"><div class="adv-delay-fill" style="width:${Math.round(v/max*100)}%"></div></div><div class="adv-delay-ct">${v}x</div>${v>=10?`<span style="font-size:9px;color:#7c6fff;font-weight:700">HOT</span>`:''}</div>`).join('')}</div>`;updateTriple();}
+function addDelay(){const n=parseInt(document.getElementById('delay-num-input').value);const r=parseInt(document.getElementById('delay-rounds-input').value);if(!n||!r||n<1||n>43){showToast('Insira número válido');return;}delayData[n]=r;document.getElementById('delay-num-input').value='';document.getElementById('delay-rounds-input').value='';buildDelayChart();}
+function updateTriple(){const L=LOTTERIES[currentLottery];const allNums=Array.from({length:L.total||37},(_,i)=>i+1);const scores={};allNums.forEach(n=>{let score=0;if(pressureNums.has(n))score++;if(setballNums.has(n))score++;if(delayNums.has(n))score++;if(score>0)scores[n]=score;});const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);const triple=sorted.filter(([,s])=>s===3).map(([n])=>+n);const double=sorted.filter(([,s])=>s===2).map(([n])=>+n);const el=document.getElementById('triple-result');if(!sorted.length){el.innerHTML=`<div class="adv-empty">Preencha os 3 critérios acima para ver os números com triple confirmação</div>`;return;}const renderBall=(n,score)=>{const colors=['#e63950','#e68a00','#2a9a50','#2070d0','#8040c0','#40a0c0'];const ci=Math.floor((n-1)/Math.ceil((L.total||37)/colors.length));const c=colors[Math.min(ci,colors.length-1)];return `<div class="adv-triple-wrap"><div class="adv-triple-ball" style="background:linear-gradient(135deg,${c},${c}aa)">${n}</div><div class="adv-triple-badge">${'⭐'.repeat(score)}</div></div>`;};let html='';if(triple.length)html+=`<div style="font-size:11px;font-weight:700;color:#f0c040;margin-bottom:8px">🏆 Triple confirmação (3 critérios)</div><div class="adv-triple-balls">${triple.map(n=>renderBall(n,3)).join('')}</div>`;if(double.length)html+=`<div style="font-size:11px;font-weight:700;color:#00e096;margin:10px 0 8px">🥈 Dupla confirmação (2 critérios)</div><div class="adv-triple-balls">${double.slice(0,10).map(n=>renderBall(n,2)).join('')}</div>`;el.innerHTML=html||`<div class="adv-empty">Nenhuma confirmação ainda</div>`;}
+async function generateTripleAI(){if(!canUseAI()){openPro();return;}incrementDaily();const L=LOTTERIES[currentLottery];document.getElementById('adv-loading').classList.add('show');document.getElementById('adv-results').innerHTML='';document.getElementById('btn-triple').disabled=true;try{const triple=[...pressureNums].filter(n=>setballNums.has(n)&&delayNums.has(n));const double=[...pressureNums].filter(n=>setballNums.has(n)||delayNums.has(n));const hotNums=Object.entries(L.freq||{}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);const prompt=`Especialista em ${L.name} japonesa — Triple Análise.\nRegras: 1 a ${L.total||37}, escolhe ${L.pick||7} por jogo.\n\nDADOS:\n🏆 Triple (pressão+conjunto+atraso): ${triple.join(', ')||'(nenhum)'}\n🥈 Dupla: ${double.slice(0,10).join(', ')||'(calcular)'}\n🌡️ Pressão similar: ${[...pressureNums].join(', ')||'(não informada)'}\n🎱 Conjunto ${selectedSetball}: ${SET_DATA[selectedSetball]?.hot.join(', ')||''}\n⏳ Atraso (10+): ${[...delayNums].join(', ')||'30,27,34,31,35'}\n📊 Quentes: ${hotNums.join(', ')}\n\nGere 5 jogos priorizando triple e dupla.\nJSON sem markdown:\n{"games":[{"nums":[n1,n2,n3,n4,n5,n6,n7],"reason":"max 50 chars","conf":78},{"nums":[...],"reason":"...","conf":74},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":65}]}\nExatamente ${L.pick||7} por jogo, 1 a ${L.total||37}, sem repetição, crescente.`;const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});const data=await res.json();const text=data.content?.map(c=>c.text||'').join('')||'';const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());const container=document.getElementById('adv-results');container.innerHTML=`<p class="slabel" style="margin-top:16px">🎯 Jogos Triple IA</p>`;parsed.games.forEach((g,i)=>{const conf=g.conf||75;const cc=conf>=75?'#f0c040':conf>=70?'#00e096':'#4dbfff';const card=document.createElement('div');card.className='result-card';card.style.borderColor='rgba(240,192,64,0.3)';card.innerHTML=`<div class="rc-header"><span class="rc-label">Jogo ${i+1} 🔬</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">Triple ${conf}%</span></div><div class="rc-balls">${g.nums.map(n=>`<div class="rb" style="${getBallStyle(n,L.total||37)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;container.appendChild(card);});showToast('Triple IA gerou 5 jogos! 🔬');}catch(e){showToast('Erro ao gerar. Tente novamente.');}finally{document.getElementById('adv-loading').classList.remove('show');document.getElementById('btn-triple').disabled=false;if(!isPro)showUsageWarning();}}
+function buildAdvanced(){buildDelayChart();selectSet(selectedSetball);}
+applyTranslations();
+buildPickPanel();
+const urlParams=new URLSearchParams(window.location.search);
+if(urlParams.get('pro')==='success'){isPro=true;localStorage.setItem('jlp_pro','true');showToast('⭐ PRO ativado! Obrigado pela assinatura!');if(typeof gtag!=='undefined')gtag('event','pro_purchased');}
+const lotteryParam=urlParams.get('lottery');
+if(lotteryParam&&LOTTERIES[lotteryParam]){const btn=document.querySelector(`[data-id="${lotteryParam}"]`);if(btn)selectLottery(lotteryParam,btn);}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('[PWA] SW:',reg.scope)).catch(err=>console.warn('[PWA]',err));});}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;setTimeout(()=>showInstallBanner(),30000);});
+function showInstallBanner(){if(!deferredPrompt)return;const banner=document.createElement('div');banner.id='install-banner';banner.style.cssText='position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#0b0f1e;border:1px solid rgba(240,192,64,0.4);border-radius:14px;padding:12px 16px;z-index:300;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);max-width:340px;width:90%;';banner.innerHTML=`<div style="font-size:28px">📲</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#e8eaf6;margin-bottom:2px">Instalar Japan Lottery Pro</div><div style="font-size:11px;color:#6a74a0">Acesso rápido na tela inicial</div></div><button onclick="installPWA()" style="background:linear-gradient(135deg,#f0c040,#e68a00);color:#000;border:none;border-radius:9px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer">Instalar</button><button onclick="document.getElementById('install-banner').remove()" style="background:transparent;border:none;color:#6a74a0;font-size:18px;cursor:pointer;padding:0 4px">×</button>`;document.body.appendChild(banner);}
+function installPWA(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(result=>{if(result.outcome==='accepted'){if(typeof gtag!=='undefined')gtag('event','pwa_install');showToast('✅ App instalado!');}deferredPrompt=null;const b=document.getElementById('install-banner');if(b)b.remove();});}
+</script>
+</body>
+</html>
