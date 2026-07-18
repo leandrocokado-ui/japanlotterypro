@@ -10,34 +10,33 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "categories": ["games", "entertainment", "utilities"],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "Loto 7",
       "short_name": "Loto 7",
       "description": "Gerar números para o Loto 7",
       "url": "/?lottery=loto7",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Loto 6",
       "short_name": "Loto 6",
       "description": "Gerar números para o Loto 6",
       "url": "/?lottery=loto6",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
