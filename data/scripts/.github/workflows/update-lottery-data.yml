@@ -1,0 +1,36 @@
+name: Atualizar sorteios (Japan Lottery Pro)
+
+on:
+  schedule:
+    # Todo dia às 19:30 JST (10:30 UTC) — depois do horário de todos os sorteios (18:45 JST)
+    - cron: '30 10 * * *'
+  workflow_dispatch: {}
+    # ↑ Isso permite rodar manualmente: no GitHub (mesmo pelo celular),
+    # vá em "Actions" > "Atualizar sorteios (Japan Lottery Pro)" > "Run workflow"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependência (cheerio)
+        run: npm install cheerio
+
+      - name: Buscar sorteios reais e atualizar JSON
+        run: node scripts/update-draws.js
+
+      - name: Commit se houve mudança
+        run: |
+          git config user.name "lottery-data-bot"
+          git config user.email "actions@github.com"
+          git add data/lottery-data.json
+          git diff --cached --quiet || git commit -m "chore: atualizar sorteios automaticamente"
+          git push
