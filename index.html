@@ -309,10 +309,10 @@ h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background
   </div>
   <div class="panel" id="panel-advanced">
     <div class="adv-hero"><div class="adv-hero-icon">🔬</div><div class="adv-hero-title" data-t="adv-title">Análise Avançada Triple IA</div><div class="adv-hero-sub" data-t="adv-sub">Pressão atmosférica · Conjunto de bolas · Atraso histórico</div></div>
-    <div class="adv-step">
+    <div class="adv-step" id="adv-step-pressure">
       <div class="adv-step-header"><div class="adv-step-num">1</div><div><div class="adv-step-title" data-t="adv-s1-title">🌡️ Pressão Atmosférica</div><div class="adv-step-desc" data-t="adv-s1-desc">Ar mais denso afeta a trajetória das bolas</div></div></div>
       <div class="adv-input-row"><input class="adv-input" id="pressure-input" type="number" step="0.1" placeholder="Ex: 1011.8"><select class="adv-select" id="pressure-unit"><option value="local">hPa (local)</option><option value="sea">hPa (nível mar)</option></select></div>
-      <div class="adv-ref-box"><div class="adv-ref-title">📋 Referência histórica (Kyobashi, Tóquio)</div><div class="adv-ref-grid"><div class="adv-ref-item"><span class="adv-ref-date">01/05/2015</span><span class="adv-ref-val">1011.8 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">01/05/2020</span><span class="adv-ref-val">1010.9 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">23/05/2025</span><span class="adv-ref-val">1010.3 hPa</span></div></div><div class="adv-ref-note">Números quentes: 03 · 08 · 09 · 13 · 17 · 27 · 33</div></div>
+      <div class="adv-ref-box"><div class="adv-ref-title">📋 Referência histórica (Kyobashi, Tóquio)</div><div class="adv-ref-grid"><div class="adv-ref-item"><span class="adv-ref-date">01/05/2015</span><span class="adv-ref-val">1011.8 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">01/05/2020</span><span class="adv-ref-val">1010.9 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">23/05/2025</span><span class="adv-ref-val">1010.3 hPa</span></div></div><div class="adv-ref-note" id="pressure-ref-note">Números quentes: 03 · 08 · 09 · 13 · 17 · 27 · 33</div></div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
   <button class="adv-btn" onclick="fetchPressureAuto()" id="btn-auto-pressure" style="flex:1;background:linear-gradient(135deg,#00b4d8,#0077b6)">🌡️ Buscar pressão automática</button>
   <button class="adv-btn" onclick="analyzePressure()" style="flex:1">🔍 Analisar manual</button>
@@ -320,7 +320,7 @@ h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background
 <div id="pressure-auto-status" style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px"></div>
       <div id="pressure-result"></div>
     </div>
-    <div class="adv-step">
+    <div class="adv-step" id="adv-step-setball">
       <div class="adv-step-header"><div class="adv-step-num">2</div><div><div class="adv-step-title" data-t="adv-s2-title">🎱 Conjunto de Bolas (セット球)</div><div class="adv-step-desc" data-t="adv-s2-desc">Cada conjunto A–J tem tendência própria</div></div></div>
       <div class="adv-setball-grid"><div class="adv-setball"><div class="adv-setball-label">Último sorteio</div><div class="adv-setball-val" id="last-set-val">E</div><div class="adv-setball-note">#673 · 17/04/2026</div></div><div class="adv-setball"><div class="adv-setball-label">Previsão próximo</div><div class="adv-setball-val" style="color:var(--active)">F/G</div><div class="adv-setball-note">Ciclo A→J · 10 sorteios</div></div></div>
       <div class="adv-sets-row"><button class="adv-set-btn" onclick="selectSet('A')">A</button><button class="adv-set-btn" onclick="selectSet('B')">B</button><button class="adv-set-btn" onclick="selectSet('C')">C</button><button class="adv-set-btn" onclick="selectSet('D')">D</button><button class="adv-set-btn" onclick="selectSet('E')">E</button><button class="adv-set-btn active" onclick="selectSet('F')">F</button><button class="adv-set-btn" onclick="selectSet('G')">G</button><button class="adv-set-btn" onclick="selectSet('H')">H</button><button class="adv-set-btn" onclick="selectSet('I')">I</button><button class="adv-set-btn" onclick="selectSet('J')">J</button></div>
@@ -400,8 +400,8 @@ const T={
     info_bingo5:'🎯 <strong>BINGO 5:</strong> Cartela 5×5. Complete linhas. Sorteios toda quarta. 1º Prêmio: <strong>~¥100M</strong>.',
     info_num3:'🟠 <strong>NUMBERS 3:</strong> Adivinhe 3 dígitos (000–999). Sorteios diários. Prêmio exato: <strong>~¥144.000</strong>.',
     info_num4:'🔵 <strong>NUMBERS 4:</strong> Adivinhe 4 dígitos (0000–9999). Sorteios diários. Prêmio exato: <strong>~¥900.000</strong>.',
-    pr_jackpot:'1º 🏆 Jackpot',pr_2:'2º 🥇',pr_3:'3º 🥈',pr_4:'4º 🥉',pr_5:'5º 🎉',pr_6:'6º ✨',
-    pr_5L:'1º 🏆 5 Linhas',pr_4L:'2º 🥇 4 Linhas',pr_3L:'3º 🥈 3 Linhas',pr_2L:'4º 🥉 2 Linhas',pr_1L:'5º 🎉 1 Linha',
+    pr_jackpot:'1o 🏆 Jackpot',pr_2:'2o 🥇',pr_3:'3o 🥈',pr_4:'4o 🥉',pr_5:'5o 🎉',pr_6:'6o ✨',
+    pr_5L:'1o 🏆 5 Linhas',pr_4L:'2o 🥇 4 Linhas',pr_3L:'3o 🥈 3 Linhas',pr_2L:'4o 🥉 2 Linhas',pr_1L:'5o 🎉 1 Linha',
     pr_exact:'Exato 🏆',pr_any:'Qualquer ordem 🥈',
     'guide-alert-text':'Proibido para menores de 18 anos. Jogue com responsabilidade.',
     'guide-where-label':'🏪 Onde comprar','gc-convini-title':'Convenience Store (コンビニ)','gc-bank-title':'Banco Mizuho (みずほ銀行)',
@@ -477,7 +477,7 @@ const LOTTERIES={
     prizes:[{hits:5,pkey:'pr_jackpot',value:10000000},{hits:'4+b',pkey:'pr_2',value:150000},{hits:4,pkey:'pr_3',value:7000},{hits:3,pkey:'pr_4',value:1000}]},
   bingo5:{name:'BINGO 5',emoji:'🎯',color:'#7c6fff',type:'bingo',total:25,pick:5,days:'Qua·水',price:200,
     freq:{1:6,2:8,3:5,4:7,5:9,6:4,7:8,8:6,9:7,10:5,11:9,12:6,13:8,14:5,15:7,16:4,17:8,18:6,19:7,20:9,21:5,22:8,23:6,24:7,25:5},
-    lastDraws:[{id:850,date:'09/04/2026',nums:[3,7,12,18,22]},{id:849,date:'02/04/2026',nums:[1,9,14,20,24]},{id:848,date:'26/03/2026',nums:[5,11,16,21,25]}],
+    lastDraws:[{id:850,date:'09/04/2026',nums:[3,7,12,18,22]},{id:849,date:'02/04/2026',nums:[1,9,14,20,24]},{id:848,date:'26/03/2026',nums:[5,11,16,21,25]},{id:847,date:'19/03/2026',nums:[2,8,13,19,23]},{id:846,date:'12/03/2026',nums:[4,10,15,17,24]}],
     prizes:[{hits:'5L',pkey:'pr_5L',value:100000000},{hits:'4L',pkey:'pr_4L',value:5000000},{hits:'3L',pkey:'pr_3L',value:100000},{hits:'2L',pkey:'pr_2L',value:2000},{hits:'1L',pkey:'pr_1L',value:500}]},
   num3:{name:'NUMBERS 3',emoji:'🟠',color:'#ff8c42',type:'numbers',digits:3,days:'毎日·Diário',price:200,
     freq:{0:8,1:11,2:9,3:7,4:10,5:8,6:9,7:12,8:8,9:7},
@@ -485,15 +485,49 @@ const LOTTERIES={
     prizes:[{hits:'exact',pkey:'pr_exact',value:144000},{hits:'any',pkey:'pr_any',value:24000}]},
   num4:{name:'NUMBERS 4',emoji:'🔵',color:'#4dbfff',type:'numbers',digits:4,days:'毎日·Diário',price:200,
     freq:{0:9,1:10,2:8,3:11,4:7,5:9,6:10,7:8,8:9,9:7},
-    lastDraws:[{id:3820,date:'11/04/2026',nums:'5391'},{id:3819,date:'10/04/2026',nums:'2847'},{id:3818,date:'09/04/2026',nums:'0162'}],
+    lastDraws:[{id:3820,date:'11/04/2026',nums:'5391'},{id:3819,date:'10/04/2026',nums:'2847'},{id:3818,date:'09/04/2026',nums:'0162'},{id:3817,date:'08/04/2026',nums:'7395'},{id:3816,date:'07/04/2026',nums:'4821'}],
     prizes:[{hits:'exact',pkey:'pr_exact',value:900000},{hits:'any',pkey:'pr_any',value:93750}]}
 };
+// Recalcula frequência (hot/cold) a partir dos sorteios REAIS carregados,
+// em vez de usar o snapshot fixo que fica desatualizado com o tempo.
+function computeFreqFromDraws(L){
+  const total=L.total||37,start=1;
+  const freq={};
+  for(let i=start;i<=total;i++)freq[i]=0;
+  (L.lastDraws||[]).forEach(d=>{
+    (d.nums||[]).forEach(n=>{if(freq[n]!==undefined)freq[n]++;});
+    if(d.bonus){(Array.isArray(d.bonus)?d.bonus:[d.bonus]).forEach(b=>{if(freq[b]!==undefined)freq[b]++;});}
+  });
+  return freq;
+}
+function computeDigitFreqFromDraws(L){
+  const freq={};for(let i=0;i<=9;i++)freq[i]=0;
+  (L.lastDraws||[]).forEach(d=>{d.nums.toString().split('').forEach(ch=>{const n=+ch;if(freq[n]!==undefined)freq[n]++;});});
+  return freq;
+}
+// Busca data/lottery-data.json (dados reais, atualizados pela automação ou manualmente)
+// e substitui os dados congelados. Se falhar (offline, arquivo ausente), segue com os dados embutidos.
+async function loadRealDrawData(){
+  try{
+    const res=await fetch('/data/lottery-data.json');
+    if(!res.ok)throw new Error('sem arquivo de dados');
+    const fresh=await res.json();
+    Object.keys(fresh).forEach(id=>{
+      if(id.startsWith('_')||!LOTTERIES[id]||!fresh[id]?.lastDraws?.length)return;
+      const L=LOTTERIES[id];
+      L.lastDraws=fresh[id].lastDraws;
+      L.freq=(L.type==='numbers')?computeDigitFreqFromDraws(L):computeFreqFromDraws(L);
+    });
+  }catch(e){
+    console.warn('[dados reais] usando dados embutidos de fallback:',e.message);
+  }
+}
 let currentLottery='loto6',selected=[],selectedDigits={};
 let isPro=localStorage.getItem('jlp_pro')==='true';
 let dailyCount=parseInt(localStorage.getItem('jlp_daily')||'0');
 let lastDate=localStorage.getItem('jlp_date')||'';
 const FREE_LIMIT=3;
-function selectLottery(id,el){document.querySelectorAll('.lottery-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');currentLottery=id;const L=LOTTERIES[id];document.documentElement.style.setProperty('--active',L.color);selected=[];selectedDigits={};document.getElementById('results').innerHTML='';document.getElementById('check-box').classList.remove('show');buildPickPanel();if(document.getElementById('panel-stats').classList.contains('active'))buildStats();showToast(`${L.emoji} ${L.name} ${t('lottery-selected')}`);}
+function selectLottery(id,el){document.querySelectorAll('.lottery-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');currentLottery=id;const L=LOTTERIES[id];document.documentElement.style.setProperty('--active',L.color);selected=[];selectedDigits={};document.getElementById('results').innerHTML='';document.getElementById('check-box').classList.remove('show');buildPickPanel();if(document.getElementById('panel-stats').classList.contains('active'))buildStats();if(document.getElementById('panel-advanced').classList.contains('active'))buildAdvanced();showToast(`${L.emoji} ${L.name} ${t('lottery-selected')}`);}
 function buildPickPanel(){const L=LOTTERIES[currentLottery];document.getElementById('lottery-info').innerHTML=t('info_'+currentLottery);const bs=document.getElementById('ball-section'),ss=document.getElementById('special-section');if(L.type==='balls'||L.type==='bingo'){bs.style.display='block';ss.style.display='none';document.getElementById('sel-label').textContent=t('sel-selected',{n:L.maxSel||L.pick});const grid=document.getElementById('ball-grid');const cols=L.total<=25?5:L.total<=31?6:7;grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.innerHTML='';if(L.type==='bingo'){grid.style.gridTemplateColumns='repeat(5,1fr)';['B','I','N','G','O'].forEach(h=>{const hd=document.createElement('div');hd.style.cssText='text-align:center;font-size:12px;font-weight:700;padding:6px 0;color:var(--active);letter-spacing:2px;';hd.textContent=h;grid.appendChild(hd);});for(let row=0;row<5;row++)for(let col=0;col<5;col++){const n=col*5+row+1;if(row===2&&col===2){const fc=document.createElement('div');fc.className='ball';fc.style.cssText='cursor:default;font-size:9px;color:var(--muted);background:var(--bg4)';fc.textContent='FREE';grid.appendChild(fc);}else{const b=document.createElement('div');b.className='ball';b.id=`ball-${n}`;b.textContent=n;b.onclick=()=>toggleBall(n,b);grid.appendChild(b);}}}else{for(let i=1;i<=L.total;i++){const b=document.createElement('div');b.className='ball';b.id=`ball-${i}`;b.textContent=i;b.onclick=()=>toggleBall(i,b);grid.appendChild(b);}}updateSelDisplay();}else{bs.style.display='none';ss.style.display='block';buildNumbersSelector(L);}}
 function buildNumbersSelector(L){const digits=L.digits;let html=`<p class="slabel">🔢 Dígitos</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:13px">`;for(let d=0;d<digits;d++){html+=`<div class="digit-slot"><div class="digit-label">${t('digit',{n:d+1})}</div><div class="digit-btns" id="digit-${d}">`;for(let n=0;n<10;n++)html+=`<button class="digit-btn" id="d${d}-${n}" onclick="selectDigit(${d},${n})">${n}</button>`;html+=`</div></div>`;}html+=`</div><div class="sel-bar" style="margin-bottom:13px"><div><div class="sel-count" id="sel-count" style="font-size:24px;letter-spacing:4px">---</div><div class="sel-label">${t('chosen-number')}</div></div><div style="font-size:11px;color:var(--muted);text-align:right">${t('tap-digits')}</div></div>`;document.getElementById('special-section').innerHTML=html;}
 function selectDigit(pos,n){selectedDigits[pos]=selectedDigits[pos]===n?null:n;document.querySelectorAll(`#digit-${pos} .digit-btn`).forEach(b=>b.classList.remove('sel'));if(selectedDigits[pos]!==null&&selectedDigits[pos]!==undefined)document.getElementById(`d${pos}-${n}`).classList.add('sel');const L=LOTTERIES[currentLottery];let d='';for(let i=0;i<L.digits;i++)d+=(selectedDigits[i]!==null&&selectedDigits[i]!==undefined)?selectedDigits[i]:'-';const sc=document.getElementById('sel-count');if(sc)sc.textContent=d;}
@@ -558,6 +592,34 @@ async function generateBallsAI(L,favs){
       10:{hot:[6,12,18,24,30,37],soma:127,note:'Outubro: médios'},
       11:{hot:[4,10,16,22,28,37],soma:120,note:'Novembro: equilibrado'},
       12:{hot:[2,8,14,20,26,37],soma:108,note:'Dezembro: somas baixas'}
+    },
+    mini:{
+      1:{hot:[3,8,13,19,25],soma:68,note:'Janeiro: distribuição média'},
+      2:{hot:[2,9,14,20,26],soma:71,note:'Fevereiro: equilíbrio'},
+      3:{hot:[4,10,15,21,27],soma:77,note:'Março: números médios-altos'},
+      4:{hot:[1,7,12,18,24],soma:62,note:'Abril: baixos dominantes'},
+      5:{hot:[5,11,16,22,28],soma:82,note:'Maio: mais altos'},
+      6:{hot:[3,8,14,19,25],soma:69,note:'Junho: equilibrado'},
+      7:{hot:[2,7,13,18,24],soma:64,note:'Julho: somas menores'},
+      8:{hot:[6,12,17,23,29],soma:87,note:'Agosto: faixa alta'},
+      9:{hot:[1,8,14,20,26],soma:69,note:'Setembro: distribuído'},
+      10:{hot:[4,9,15,21,27],soma:76,note:'Outubro: médios'},
+      11:{hot:[3,10,16,22,28],soma:79,note:'Novembro: equilibrado'},
+      12:{hot:[2,7,12,18,24],soma:63,note:'Dezembro: somas baixas'}
+    },
+    bingo5:{
+      1:{hot:[4,9,13,18,22],soma:66,note:'Janeiro: distribuição média'},
+      2:{hot:[3,8,14,19,23],soma:67,note:'Fevereiro: equilíbrio'},
+      3:{hot:[5,10,15,20,24],soma:74,note:'Março: mais altos'},
+      4:{hot:[2,7,12,17,21],soma:59,note:'Abril: baixos'},
+      5:{hot:[6,11,16,20,25],soma:78,note:'Maio: faixa alta'},
+      6:{hot:[4,9,13,18,22],soma:66,note:'Junho: equilibrado'},
+      7:{hot:[1,6,11,16,21],soma:55,note:'Julho: somas menores'},
+      8:{hot:[7,12,17,21,25],soma:82,note:'Agosto: faixa alta'},
+      9:{hot:[3,8,13,18,22],soma:64,note:'Setembro: distribuído'},
+      10:{hot:[5,10,14,19,24],soma:72,note:'Outubro: médios'},
+      11:{hot:[4,9,15,20,24],soma:72,note:'Novembro: equilibrado'},
+      12:{hot:[2,7,12,17,21],soma:59,note:'Dezembro: somas baixas'}
     }
   };
 
@@ -607,15 +669,15 @@ IMPORTANTE: Analise os últimos sorteios e o padrão sazonal de ${currentMonthNa
 Responda APENAS com JSON sem markdown:
 {"games":[{"nums":[${numsPlaceholder}],"reason":"método+mês usado, max 50 chars","conf":75},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":64},{"nums":[...],"reason":"...","conf":60}]}`;
 
-  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});
+  const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.3-70b-versatile",max_tokens:1000,messages:[{role:"user",content:prompt}]})});
   const data=await res.json();
-  const text=data.content?.map(c=>c.text||'').join('')||'';
+  const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';
   let parsed;
   try{
     parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
   }catch(_){
     const match=text.match(/\{[\s\S]*\}/);
-    if(!match)throw new Error('Resposta inválida da IA');
+    if(!match)throw new Error('Resposta inválida da IA: '+text.slice(0,200));
     parsed=JSON.parse(match[0]);
   }
   if(!parsed?.games)throw new Error('IA não retornou jogos válidos');
@@ -624,15 +686,15 @@ Responda APENAS com JSON sem markdown:
 }
 async function generateAutoAI(){if(!canUseAI()){openPro();return;}incrementDaily();const btn=document.getElementById('btn-auto');btn.disabled=true;document.getElementById('loading').classList.add('show');document.getElementById('results').innerHTML='';try{const L=LOTTERIES[currentLottery];if(L.type==='numbers')await generateNumbersAI(L);else await generateBallsAI(L,null);showToast(t('generate-ok'));}catch(e){generateFallback(LOTTERIES[currentLottery]);showToast(t('generate-local'));}finally{document.getElementById('loading').classList.remove('show');btn.disabled=false;if(!isPro)showUsageWarning();}}
 async function generateAI(){const L=LOTTERIES[currentLottery];if(L.type==='numbers'){await generateAutoAI();return;}if(selected.length<L.pick){showToast(t('select-min',{n:L.pick}));return;}if(!canUseAI()){openPro();return;}incrementDaily();document.getElementById('loading').classList.add('show');document.getElementById('results').innerHTML='';document.getElementById('btn-ai-btn').disabled=true;try{await generateBallsAI(L,selected);}catch(e){generateFallback(L);}finally{document.getElementById('loading').classList.remove('show');document.getElementById('btn-ai-btn').disabled=false;if(!isPro)showUsageWarning();}}
-async function generateNumbersAI(L){const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const last=L.lastDraws.slice(0,3).map(d=>d.nums).join(', ');const prompt=`Especialista em ${L.name} do Japão. Gere 5 jogos de ${L.digits} dígitos (0-9).\nDígitos mais frequentes: ${hot.join(', ')} | Últimos resultados: ${last}\nVarie as estratégias: frequentes, mistura, raros, distribuição, surpresa.\nResponda APENAS com JSON sem markdown:\n{"games":[{"nums":"${'d'.repeat(L.digits)}","reason":"max 40 chars","conf":70},{"nums":"...","reason":"...","conf":67},{"nums":"...","reason":"...","conf":64},{"nums":"...","reason":"...","conf":60},{"nums":"...","reason":"...","conf":56}]}`;const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});const data=await res.json();const text=data.content?.map(c=>c.text||'').join('')||'';renderNumberResults(JSON.parse(text.replace(/```json|```/g,'').trim()).games,L);}
+async function generateNumbersAI(L){const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const last=L.lastDraws.slice(0,3).map(d=>d.nums).join(', ');const prompt=`Especialista em ${L.name} do Japão. Gere 5 jogos de ${L.digits} dígitos (0-9).\nDígitos mais frequentes: ${hot.join(', ')} | Últimos resultados: ${last}\nVarie as estratégias: frequentes, mistura, raros, distribuição, surpresa.\nResponda APENAS com JSON sem markdown:\n{"games":[{"nums":"${'d'.repeat(L.digits)}","reason":"max 40 chars","conf":70},{"nums":"...","reason":"...","conf":67},{"nums":"...","reason":"...","conf":64},{"nums":"...","reason":"...","conf":60},{"nums":"...","reason":"...","conf":56}]}`;const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.3-70b-versatile",max_tokens:800,messages:[{role:"user",content:prompt}]})});const data=await res.json();const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';renderNumberResults(JSON.parse(text.replace(/```json|```/g,'').trim()).games,L);}
 function generateRandom(){const L=LOTTERIES[currentLottery];if(L.type==='numbers'){renderNumberResults(Array.from({length:5},()=>({nums:Array.from({length:L.digits},()=>Math.floor(Math.random()*10)).join(''),reason:t('random-gen'),conf:Math.floor(Math.random()*15)+48})),L);}else{const all=Array.from({length:L.total},(_,i)=>i+1);renderBallResults(Array.from({length:5},()=>({nums:[...all].sort(()=>.5-Math.random()).slice(0,L.pick).sort((a,b)=>a-b),reason:t('random-gen'),conf:Math.floor(Math.random()*18)+48})),L);}}
 function generateFallback(L){if(L.type==='numbers'){renderNumberResults(Array.from({length:5},(_,i)=>({nums:Array.from({length:L.digits},()=>Math.floor(Math.random()*10)).join(''),reason:t('random-gen'),conf:66-i*3})),L);}else{const pool=selected.length>=L.pick?selected:Array.from({length:L.total},(_,j)=>j+1);renderBallResults(Array.from({length:5},(_,i)=>({nums:[...pool].sort(()=>.5-Math.random()).slice(0,L.pick).sort((a,b)=>a-b),reason:t('random-gen'),conf:66-i*3})),L);}}
 function renderBallResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;games.forEach((g,i)=>{const conf=g.conf||Math.floor(Math.random()*20)+54;const cc=conf>=70?'#00d4aa':conf>=62?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${(g.nums||g.numbers).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});}
 function renderNumberResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;games.forEach((g,i)=>{const conf=g.conf||Math.floor(Math.random()*18)+52;const cc=conf>=68?'#00d4aa':conf>=60?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';const numStr=g.nums.toString().padStart(L.digits,'0');card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${numStr.split('').map(d=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}cc,${L.color}88);font-size:18px;width:44px;height:44px;">${d}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});}
 function switchTab(tab){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));document.getElementById(`panel-${tab}`).classList.add('active');document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('active');const nb=document.getElementById(`nav-${tab}`);if(nb)nb.classList.add('active');if(tab==='stats')buildStats();if(tab==='check')buildPrizeTable();if(tab==='guide')buildGuide();if(tab==='advanced')buildAdvanced();}
-function buildStats(){const L=LOTTERIES[currentLottery];const sorted=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]);document.getElementById('hot-balls').innerHTML=sorted.slice(0,7).map(([n])=>`<div class="mini-ball mb-hot">${n}</div>`).join('');document.getElementById('cold-balls').innerHTML=sorted.slice(-7).map(([n])=>`<div class="mini-ball mb-cold">${n}</div>`).join('');const rf={};(L.lastDraws.flatMap(d=>d.nums||[])).forEach(n=>rf[n]=(rf[n]||0)+1);document.getElementById('lucky-balls').innerHTML=Object.entries(rf).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([n])=>`<div class="mini-ball mb-lucky">${n}</div>`).join('');const top=sorted.slice(0,12),maxF=+top[0][1];document.getElementById('freq-chart').innerHTML=top.map(([n,f])=>`<div class="freq-item"><div class="freq-n">${n}</div><div class="freq-wrap"><div class="freq-bar" style="width:${Math.round(+f/maxF*100)}%"></div></div><div class="freq-ct">${f}x</div></div>`).join('');document.getElementById('last-draws').innerHTML=L.lastDraws.map(d=>{let bh;if(L.type==='numbers'){bh=d.nums.split('').map(n=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}aa,${L.color}66);width:34px;height:34px;font-size:16px;">${n}</div>`).join('');}else{bh=(d.nums||[]).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('');if(d.bonus){if(Array.isArray(d.bonus))d.bonus.forEach(b=>bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">${b}</div>`);else bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">B:${d.bonus}</div>`;}}return `<div class="draw-card"><div class="dc-header"><span class="dc-id">#${d.id}</span><span class="dc-date">${d.date}</span></div><div class="rc-balls">${bh}</div></div>`;}).join('');}
+function buildStats(){const L=LOTTERIES[currentLottery];const sorted=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]);document.getElementById('hot-balls').innerHTML=sorted.slice(0,7).map(([n])=>`<div class="mini-ball mb-hot">${n}</div>`).join('');document.getElementById('cold-balls').innerHTML=sorted.slice(-7).map(([n])=>`<div class="mini-ball mb-cold">${n}</div>`).join('');const rf={};(L.lastDraws.flatMap(d=>d.nums||[])).forEach(n=>rf[n]=(rf[n]||0)+1);document.getElementById('lucky-balls').innerHTML=Object.entries(rf).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([n])=>`<div class="mini-ball mb-lucky">${n}</div>`).join('');const top=sorted.slice(0,12),maxF=+top[0][1]||1;document.getElementById('freq-chart').innerHTML=top.map(([n,f])=>`<div class="freq-item"><div class="freq-n">${n}</div><div class="freq-wrap"><div class="freq-bar" style="width:${Math.round(+f/maxF*100)}%"></div></div><div class="freq-ct">${f}x</div></div>`).join('');document.getElementById('last-draws').innerHTML=L.lastDraws.map(d=>{let bh;if(L.type==='numbers'){bh=d.nums.split('').map(n=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}aa,${L.color}66);width:34px;height:34px;font-size:16px;">${n}</div>`).join('');}else{bh=(d.nums||[]).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('');if(d.bonus){if(Array.isArray(d.bonus))d.bonus.forEach(b=>bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">${b}</div>`);else bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">B:${d.bonus}</div>`;}}return `<div class="draw-card"><div class="dc-header"><span class="dc-id">#${d.id}</span><span class="dc-date">${d.date}</span></div><div class="rc-balls">${bh}</div></div>`;}).join('');}
 function buildPrizeTable(){const L=LOTTERIES[currentLottery];const[th1,th2,th3]=lang==='ja'?['一致数','賞','金額']:['Acertos','Prêmio','Valor est.'];document.getElementById('prize-table-section').innerHTML=`<p class="slabel">${t('prize-label')} — ${L.name}</p><div class="stat-card"><table class="prize-table"><tr><th>${th1}</th><th>${th2}</th><th style="text-align:right">${th3}</th></tr>${L.prizes.map(p=>`<tr><td style="font-weight:700;color:var(--active)">${p.hits}</td><td>${t(p.pkey)}</td><td style="text-align:right;font-weight:700;color:${p.value>=1000000?'var(--active)':'var(--text)'}">${formatYen(p.value)}</td></tr>`).join('')}<tr><td colspan="3" style="font-size:10px;color:var(--muted);padding-top:10px">${t('prize-ticket',{p:L.price,d:L.days})}</td></tr></table></div>`;}
-function checkTicket(){const L=LOTTERIES[currentLottery];buildPrizeTable();if(L.type==='numbers'){const win=document.getElementById('winning-inp').value.trim().replace(/\s/g,'');const tkt=document.getElementById('ticket-inp').value.trim().replace(/\s/g,'');if(win.length!==L.digits||tkt.length!==L.digits){showToast(t('insert-digits',{n:L.digits}));return;}const exact=win===tkt,any=[...win].sort().join('')===[...tkt].sort().join('');if(exact)showCheckResult('🏆',t('exact-hit'),formatYen(L.prizes[0].value),'var(--active)');else if(any&&L.digits===3)showCheckResult('🥈',t('any-order'),formatYen(L.prizes[1]?.value||0),'#ff8c42');else showCheckResult('😔',t('no-prize'),t('keep-trying'),'var(--muted)');}else{const parse=id=>document.getElementById(id).value.split(/[\s,]+/).map(Number).filter(n=>n>=1&&n<=L.total);const win=parse('winning-inp'),tkt=parse('ticket-inp');if(win.length!==L.pick){showToast(t('insert-winning',{n:L.pick}));return;}if(tkt.length!==L.pick){showToast(t('insert-ticket',{n:L.pick}));return;}const matches=tkt.filter(n=>win.includes(n)).length;const prize=L.prizes.find(p=>p.hits===matches||(matches===L.pick&&p.hits===L.pick));if(prize)showCheckResult('🏆',t(prize.pkey),formatYen(prize.value),'var(--active)');else if(matches>0)showCheckResult('😐',t('matches',{n:matches}),t('no-prize-min'),'var(--muted)');else showCheckResult('😔',t('no-prize'),t('keep-trying'),'var(--muted)');}}
+function checkTicket(){const L=LOTTERIES[currentLottery];buildPrizeTable();if(L.type==='numbers'){const win=document.getElementById('winning-inp').value.trim().replace(/\s/g,'');const tkt=document.getElementById('ticket-inp').value.trim().replace(/\s/g,'');if(win.length!==L.digits||tkt.length!==L.digits){showToast(t('insert-digits',{n:L.digits}));return;}const exact=win===tkt,any=[...win].sort().join('')===[...tkt].sort().join('');if(exact)showCheckResult('🏆',t('exact-hit'),formatYen(L.prizes[0].value),'var(--active)');else if(any)showCheckResult('🥈',t('any-order'),formatYen(L.prizes[1]?.value||0),'#ff8c42');else showCheckResult('😔',t('no-prize'),t('keep-trying'),'var(--muted)');}else{const parse=id=>document.getElementById(id).value.split(/[\s,]+/).map(Number).filter(n=>n>=1&&n<=L.total);const win=parse('winning-inp'),tkt=parse('ticket-inp');if(win.length!==L.pick){showToast(t('insert-winning',{n:L.pick}));return;}if(tkt.length!==L.pick){showToast(t('insert-ticket',{n:L.pick}));return;}const matches=tkt.filter(n=>win.includes(n)).length;const prize=L.prizes.find(p=>p.hits===matches||(matches===L.pick&&p.hits===L.pick));if(prize)showCheckResult('🏆',t(prize.pkey),formatYen(prize.value),'var(--active)');else if(matches>0)showCheckResult('😐',t('matches',{n:matches}),t('no-prize-min'),'var(--muted)');else showCheckResult('😔',t('no-prize'),t('keep-trying'),'var(--muted)');}}
 function showCheckResult(ico,title,sub,color){document.getElementById('check-ico').textContent=ico;const tl=document.getElementById('check-title');tl.textContent=title;tl.style.color=color;document.getElementById('check-sub').innerHTML=sub;document.getElementById('check-box').classList.add('show');}
 function formatYen(v){if(v>=100000000)return`¥${(v/100000000).toFixed(0)}億円`;if(v>=10000)return`¥${Math.round(v/10000)}万円`;return`¥${v.toLocaleString()}円`;}
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2500);}
@@ -691,8 +753,11 @@ function toggleGuide(id){const body=document.getElementById(id);const chev=docum
 function buildGuide(){const G=GUIDE[lang]||GUIDE.pt;['convini','mizuho','kiosco','online'].forEach(key=>{const stepsEl=document.getElementById('steps-'+key);const tipEl=document.getElementById('tip-'+key);if(stepsEl)stepsEl.innerHTML=(G.steps[key]||[]).map(s=>`<div class="gs">${s.text}${s.note?`<small>${s.note}</small>`:''}</div>`).join('');if(tipEl)tipEl.innerHTML=G.tips[key]||'';});const phraseEl=document.getElementById('phrase-list');if(phraseEl)phraseEl.innerHTML=(G.phrases||[]).map(p=>`<div class="phrase-card"><div class="phrase-jp">${p.jp}</div><div class="phrase-romaji">${p.romaji}</div><div class="phrase-pt">${p.pt}</div></div>`).join('');const formEl=document.getElementById('form-diagram');if(formEl)formEl.innerHTML=(G.formRows||[]).map(r=>`<div class="form-row"><div class="form-label">${r.label}</div><div class="form-dots">${r.dots.map(d=>`<div class="form-dot${d.f?' filled':''}">${d.n}</div>`).join('')}</div></div>`).join('')+(G.formNote?`<div style="font-size:10px;color:var(--muted);margin:10px 14px">${G.formNote}</div>`:'');const redeemEl=document.getElementById('redeem-grid');if(redeemEl)redeemEl.innerHTML=(G.redeem||[]).map(r=>`<div class="redeem-card"><div class="redeem-icon">${r.icon}</div><div><div class="redeem-amount">${r.amount}</div><div class="redeem-where">${r.where}</div><div class="redeem-note">${r.note}</div></div></div>`).join('');const tipsEl=document.getElementById('tips-list');if(tipsEl)tipsEl.innerHTML=(G.culturalTips||[]).map(tip=>`<div class="tip-item"><div class="tip-emoji">${tip.emoji}</div><div><div class="tip-title">${tip.title}</div><div class="tip-desc">${tip.desc}</div></div></div>`).join('');}
 const SET_DATA={A:{hot:[1,12,13,15,22,27,30,35],warm:[3,7,10,17,23,28],note:'Favorece números médios (10–25)'},B:{hot:[2,9,14,19,24,30,33,36],warm:[1,11,20,26,31],note:'Tendência para números baixos e altos'},C:{hot:[4,10,13,16,22,27,29,34],warm:[3,7,19,24,31,37],note:'Distribuição equilibrada'},D:{hot:[3,9,12,15,21,26,31,34],warm:[1,6,18,23,29,37],note:'Favorece números ímpares'},E:{hot:[6,11,15,19,22,28,33,36],warm:[2,9,13,24,30,35],note:'Tendência para números médios-altos'},F:{hot:[5,10,14,20,25,29,33,37],warm:[3,8,17,22,28,34],note:'Favorece extremos (5–10 e 30–37)'},G:{hot:[3,9,13,15,22,27,30,35],warm:[7,11,18,24,29,36],note:'Alta frequência de ímpares baixos'},H:{hot:[4,8,12,18,24,30,33,36],warm:[2,10,16,22,28,35],note:'Favorece pares e números médios'},I:{hot:[1,5,11,16,21,27,31,36],warm:[6,13,19,24,29,34],note:'Distribuição por faixas amplas'},J:{hot:[2,7,13,20,26,31,35,37],warm:[4,10,17,23,28,33],note:'Tendência para extremos e altos'}};
 const PRESSURE_HISTORY=[{date:'01/05/2015',draw:107,hpa:1011.8,nums:[3,8,9,13,17,27,33]},{date:'22/05/2015',draw:110,hpa:1010.5,nums:[4,12,22,30,31,35,36]},{date:'01/05/2020',draw:369,hpa:1010.9,nums:[16,19,22,25,26,33,37]},{date:'29/05/2020',draw:374,hpa:1010.6,nums:[1,5,9,14,20,24,29]},{date:'23/05/2025',draw:640,hpa:1010.3,nums:[2,11,15,22,28,33,36]}];
-let delayData={30:19,27:16,34:14,31:11,35:10,19:10,2:9,23:9,25:9,20:8,14:7,8:7,29:7};
+let delayData={};
 let pressureNums=new Set(),setballNums=new Set(),delayNums=new Set(),selectedSetball='F';
+// Recurso "Conjunto de Bolas (セット球)" e histórico de pressão hoje só têm dados reais para a Loto 7 (37 bolas).
+// Para as demais loterias, esses dois critérios ficam desativados (mostram aviso) e o Triple usa apenas o Atraso, calculado a partir dos dados reais da loteria selecionada.
+function isSetballSupported(){return currentLottery==='loto7';}
 async function fetchPressureAuto(){
   const btn=document.getElementById('btn-auto-pressure');
   const status=document.getElementById('pressure-auto-status');
@@ -700,9 +765,7 @@ async function fetchPressureAuto(){
   status.textContent='🌡️ Buscando pressão em Tóquio...';
   status.style.color='var(--muted)';
 
-  // Tenta múltiplas APIs em sequência
   const apis=[
-    // API 1: Open-Meteo (melhor, pode falhar em iOS local)
     async()=>{
       const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.6762&longitude=139.7690&current=surface_pressure,pressure_msl&timezone=Asia%2FTokyo',{mode:'cors'});
       const d=await r.json();
@@ -710,7 +773,6 @@ async function fetchPressureAuto(){
       if(!p)throw new Error('sem dados');
       return Math.round(p*10)/10;
     },
-    // API 2: Open-Meteo com pressure_msl direto
     async()=>{
       const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.77&hourly=pressure_msl&forecast_days=1&timezone=Asia%2FTokyo');
       const d=await r.json();
@@ -718,7 +780,6 @@ async function fetchPressureAuto(){
       if(!p)throw new Error('sem dados');
       return Math.round(p*10)/10;
     },
-    // API 3: wttr.in JSON (CORS livre)
     async()=>{
       const r=await fetch('https://wttr.in/Tokyo?format=j1');
       const d=await r.json();
@@ -739,7 +800,6 @@ async function fetchPressureAuto(){
     status.style.color='#00d4aa';
     analyzePressure();
   }else{
-    // Fallback: usa pressão média histórica de Tóquio para a época do ano
     const month=new Date().getMonth();
     const seasonal=[1021,1018,1014,1010,1009,1008,1006,1007,1013,1018,1020,1022];
     const fallback=seasonal[month];
@@ -751,20 +811,66 @@ async function fetchPressureAuto(){
   btn.disabled=false;
 }
 
-function analyzePressure(){const val=parseFloat(document.getElementById('pressure-input').value);if(!val||isNaN(val)){showToast('Insira a pressão');return;}const matches=PRESSURE_HISTORY.filter(p=>Math.abs(p.hpa-val)<=1.5);pressureNums=new Set();const freq={};matches.forEach(m=>m.nums.forEach(n=>{freq[n]=(freq[n]||0)+1;pressureNums.add(n);}));const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);const el=document.getElementById('pressure-result');if(!matches.length){el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Nenhum dado histórico nessa faixa (±1.5 hPa). Tente pressão entre 1009–1013.</div></div>`;}else{el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div class="adv-ref-title">${matches.length} sorteio(s) com pressão similar (±1.5 hPa)</div><div class="adv-set-nums">${sorted.slice(0,10).map(([n,f])=>`<span class="adv-num-tag ${f>=2?'hot':'warm'}">${n}${f>=2?` ×${f}`:''}</span>`).join('')}</div><div style="font-size:10px;color:var(--muted);margin-top:6px">${matches.map(m=>`#${m.draw} (${m.date}) · ${m.hpa}hPa`).join(' · ')}</div></div>`;}updateTriple();}
-function selectSet(s){selectedSetball=s;document.querySelectorAll('.adv-set-btn').forEach(b=>b.classList.toggle('active',b.textContent===s));const data=SET_DATA[s];setballNums=new Set([...data.hot,...data.warm]);const el=document.getElementById('setball-result');if(!el)return;el.innerHTML=`<div class="adv-ref-box"><div class="adv-ref-title">Conjunto ${s} — Números favorecidos</div><div class="adv-set-nums">${data.hot.map(n=>`<span class="adv-num-tag hot">${n}</span>`).join('')}${data.warm.map(n=>`<span class="adv-num-tag warm">${n}</span>`).join('')}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">${data.note}</div></div>`;updateTriple();}
-function buildDelayChart(){const sorted=Object.entries(delayData).sort((a,b)=>b[1]-a[1]).slice(0,15);const max=sorted[0]?.[1]||1;delayNums=new Set(sorted.filter(([,v])=>v>=10).map(([n])=>+n));const el=document.getElementById('delay-chart');el.innerHTML=`<div style="margin-bottom:10px">${sorted.map(([n,v])=>`<div class="adv-delay-bar"><div class="adv-delay-n">${n}</div><div class="adv-delay-wrap"><div class="adv-delay-fill" style="width:${Math.round(v/max*100)}%"></div></div><div class="adv-delay-ct">${v}x</div>${v>=10?`<span style="font-size:9px;color:#7c6fff;font-weight:700">HOT</span>`:''}</div>`).join('')}</div>`;updateTriple();}
-function addDelay(){const n=parseInt(document.getElementById('delay-num-input').value);const r=parseInt(document.getElementById('delay-rounds-input').value);if(!n||!r||n<1||n>43){showToast('Insira número válido');return;}delayData[n]=r;document.getElementById('delay-num-input').value='';document.getElementById('delay-rounds-input').value='';buildDelayChart();}
-function updateTriple(){const L=LOTTERIES[currentLottery];const allNums=Array.from({length:L.total||37},(_,i)=>i+1);const scores={};allNums.forEach(n=>{let score=0;if(pressureNums.has(n))score++;if(setballNums.has(n))score++;if(delayNums.has(n))score++;if(score>0)scores[n]=score;});const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);const triple=sorted.filter(([,s])=>s===3).map(([n])=>+n);const double=sorted.filter(([,s])=>s===2).map(([n])=>+n);const el=document.getElementById('triple-result');if(!sorted.length){el.innerHTML=`<div class="adv-empty">Preencha os 3 critérios acima para ver os números com triple confirmação</div>`;return;}const renderBall=(n,score)=>{const colors=['#e63950','#e68a00','#2a9a50','#2070d0','#8040c0','#40a0c0'];const ci=Math.floor((n-1)/Math.ceil((L.total||37)/colors.length));const c=colors[Math.min(ci,colors.length-1)];return `<div class="adv-triple-wrap"><div class="adv-triple-ball" style="background:linear-gradient(135deg,${c},${c}aa)">${n}</div><div class="adv-triple-badge">${'⭐'.repeat(score)}</div></div>`;};let html='';if(triple.length)html+=`<div style="font-size:11px;font-weight:700;color:#f0c040;margin-bottom:8px">🏆 Triple confirmação (3 critérios)</div><div class="adv-triple-balls">${triple.map(n=>renderBall(n,3)).join('')}</div>`;if(double.length)html+=`<div style="font-size:11px;font-weight:700;color:#00e096;margin:10px 0 8px">🥈 Dupla confirmação (2 critérios)</div><div class="adv-triple-balls">${double.slice(0,10).map(n=>renderBall(n,2)).join('')}</div>`;el.innerHTML=html||`<div class="adv-empty">Nenhuma confirmação ainda</div>`;}
-async function generateTripleAI(){if(!canUseAI()){openPro();return;}incrementDaily();const L=LOTTERIES[currentLottery];document.getElementById('adv-loading').classList.add('show');document.getElementById('adv-results').innerHTML='';document.getElementById('btn-triple').disabled=true;try{const triple=[...pressureNums].filter(n=>setballNums.has(n)&&delayNums.has(n));const double=[...pressureNums].filter(n=>setballNums.has(n)||delayNums.has(n));const hotNums=Object.entries(L.freq||{}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);const prompt=`Especialista em ${L.name} japonesa — Triple Análise.\nRegras: 1 a ${L.total||37}, escolhe ${L.pick||7} por jogo.\n\nDADOS:\n🏆 Triple (pressão+conjunto+atraso): ${triple.join(', ')||'(nenhum)'}\n🥈 Dupla: ${double.slice(0,10).join(', ')||'(calcular)'}\n🌡️ Pressão similar: ${[...pressureNums].join(', ')||'(não informada)'}\n🎱 Conjunto ${selectedSetball}: ${SET_DATA[selectedSetball]?.hot.join(', ')||''}\n⏳ Atraso (10+): ${[...delayNums].join(', ')||'30,27,34,31,35'}\n📊 Quentes: ${hotNums.join(', ')}\n\nGere 5 jogos priorizando triple e dupla.\nJSON sem markdown:\n{"games":[{"nums":[n1,n2,n3,n4,n5,n6,n7],"reason":"max 50 chars","conf":78},{"nums":[...],"reason":"...","conf":74},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":65}]}\nExatamente ${L.pick||7} por jogo, 1 a ${L.total||37}, sem repetição, crescente.`;const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});const data=await res.json();const text=data.content?.map(c=>c.text||'').join('')||'';let parsed;try{const clean=text.replace(/```json|```/g,'').trim();parsed=JSON.parse(clean);}catch(_){const match=text.match(/\{[\s\S]*\}/);if(!match)throw new Error('IA retornou: '+text.slice(0,300));parsed=JSON.parse(match[0]);}if(!parsed?.games)throw new Error('Sem jogos na resposta: '+text.slice(0,200));const container=document.getElementById('adv-results');container.innerHTML=`<p class="slabel" style="margin-top:16px">🎯 Jogos Triple IA</p>`;parsed.games.forEach((g,i)=>{const conf=g.conf||75;const cc=conf>=75?'#f0c040':conf>=70?'#00e096':'#4dbfff';const card=document.createElement('div');card.className='result-card';card.style.borderColor='rgba(240,192,64,0.3)';card.innerHTML=`<div class="rc-header"><span class="rc-label">Jogo ${i+1} 🔬</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">Triple ${conf}%</span></div><div class="rc-balls">${g.nums.map(n=>`<div class="rb" style="${getBallStyle(n,L.total||37)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;container.appendChild(card);});showToast('Triple IA gerou 5 jogos! 🔬');}catch(e){
+function analyzePressure(){
+  if(!isSetballSupported()){pressureNums=new Set();document.getElementById('pressure-result').innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">📡 O histórico de pressão hoje só cobre a Loto 7. Para ${LOTTERIES[currentLottery].name}, este critério fica fora do Triple até termos dados reais dessa loteria.</div></div>`;updateTriple();return;}
+  const val=parseFloat(document.getElementById('pressure-input').value);if(!val||isNaN(val)){showToast('Insira a pressão');return;}const matches=PRESSURE_HISTORY.filter(p=>Math.abs(p.hpa-val)<=1.5);pressureNums=new Set();const freq={};matches.forEach(m=>m.nums.forEach(n=>{freq[n]=(freq[n]||0)+1;pressureNums.add(n);}));const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);const el=document.getElementById('pressure-result');if(!matches.length){el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Nenhum dado histórico nessa faixa (±1.5 hPa). Tente pressão entre 1009–1013.</div></div>`;}else{el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div class="adv-ref-title">${matches.length} sorteio(s) com pressão similar (±1.5 hPa)</div><div class="adv-set-nums">${sorted.slice(0,10).map(([n,f])=>`<span class="adv-num-tag ${f>=2?'hot':'warm'}">${n}${f>=2?` ×${f}`:''}</span>`).join('')}</div><div style="font-size:10px;color:var(--muted);margin-top:6px">${matches.map(m=>`#${m.draw} (${m.date}) · ${m.hpa}hPa`).join(' · ')}</div></div>`;}updateTriple();
+}
+function selectSet(s){
+  selectedSetball=s;
+  document.querySelectorAll('.adv-set-btn').forEach(b=>b.classList.toggle('active',b.textContent===s));
+  if(!isSetballSupported()){setballNums=new Set();const el=document.getElementById('setball-result');if(el)el.innerHTML=`<div class="adv-ref-box"><div style="color:var(--muted);font-size:12px">📡 O conjunto de bolas (セット球) hoje só tem dados reais para a Loto 7. Para ${LOTTERIES[currentLottery].name}, este critério fica fora do Triple.</div></div>`;updateTriple();return;}
+  const data=SET_DATA[s];setballNums=new Set([...data.hot,...data.warm]);const el=document.getElementById('setball-result');if(!el)return;el.innerHTML=`<div class="adv-ref-box"><div class="adv-ref-title">Conjunto ${s} — Números favorecidos</div><div class="adv-set-nums">${data.hot.map(n=>`<span class="adv-num-tag hot">${n}</span>`).join('')}${data.warm.map(n=>`<span class="adv-num-tag warm">${n}</span>`).join('')}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">${data.note}</div></div>`;updateTriple();
+}
+function calcDelayForCurrentLottery(){
+  const L=LOTTERIES[currentLottery];
+  const total=L.total||37;
+  const draws=L.lastDraws||[];
+  const result={};
+  const seen=new Set();
+  draws.forEach((d,idx)=>{
+    const nums=L.type==='numbers'?[]:(d.nums||[]);
+    nums.forEach(n=>{if(!seen.has(n)){result[n]=idx+1;seen.add(n);}});
+    if(d.bonus){const bArr=Array.isArray(d.bonus)?d.bonus:[d.bonus];bArr.forEach(b=>{if(!seen.has(b)){result[b]=idx+1;seen.add(b);}});}
+  });
+  const maxAtraso=draws.length+3;
+  for(let i=1;i<=total;i++)if(result[i]===undefined)result[i]=maxAtraso;
+  return result;
+}
+function buildDelayChart(){
+  const L=LOTTERIES[currentLottery];
+  delayData=calcDelayForCurrentLottery();
+  const numInput=document.getElementById('delay-num-input');
+  if(numInput)numInput.max=L.total||37;
+  const sorted=Object.entries(delayData).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const max=sorted[0]?.[1]||1;
+  delayNums=new Set(sorted.filter(([,v])=>v>=Math.max(3,Math.round((L.lastDraws?.length||5)*0.6))).map(([n])=>+n));
+  const el=document.getElementById('delay-chart');
+  el.innerHTML=`<div style="margin-bottom:10px">${sorted.map(([n,v])=>`<div class="adv-delay-bar"><div class="adv-delay-n">${n}</div><div class="adv-delay-wrap"><div class="adv-delay-fill" style="width:${Math.round(v/max*100)}%"></div></div><div class="adv-delay-ct">${v}x</div>${delayNums.has(+n)?`<span style="font-size:9px;color:#7c6fff;font-weight:700">HOT</span>`:''}</div>`).join('')}</div>`;
+  updateTriple();
+}
+function addDelay(){const L=LOTTERIES[currentLottery];const total=L.total||37;const n=parseInt(document.getElementById('delay-num-input').value);const r=parseInt(document.getElementById('delay-rounds-input').value);if(!n||!r||n<1||n>total){showToast(`Insira número entre 1 e ${total}`);return;}delayData[n]=r;document.getElementById('delay-num-input').value='';document.getElementById('delay-rounds-input').value='';buildDelayChart();}
+function updateTriple(){const L=LOTTERIES[currentLottery];const allNums=Array.from({length:L.total||37},(_,i)=>i+1);const scores={};allNums.forEach(n=>{let score=0;if(pressureNums.has(n))score++;if(setballNums.has(n))score++;if(delayNums.has(n))score++;if(score>0)scores[n]=score;});const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);const maxScore=isSetballSupported()?3:1;const triple=sorted.filter(([,s])=>s===maxScore).map(([n])=>+n);const double=sorted.filter(([,s])=>s===maxScore-1&&maxScore>1).map(([n])=>+n);const el=document.getElementById('triple-result');if(!sorted.length){el.innerHTML=`<div class="adv-empty">Preencha os critérios acima para ver os números com confirmação</div>`;return;}const renderBall=(n,score)=>{const colors=['#e63950','#e68a00','#2a9a50','#2070d0','#8040c0','#40a0c0'];const ci=Math.floor((n-1)/Math.ceil((L.total||37)/colors.length));const c=colors[Math.min(ci,colors.length-1)];return `<div class="adv-triple-wrap"><div class="adv-triple-ball" style="background:linear-gradient(135deg,${c},${c}aa)">${n}</div><div class="adv-triple-badge">${'⭐'.repeat(score)}</div></div>`;};let html='';if(!isSetballSupported())html+=`<div style="font-size:11px;color:var(--muted);margin-bottom:8px">📡 Para ${L.name}, apenas o critério de Atraso está disponível hoje (pressão e conjunto de bolas são exclusivos da Loto 7).</div>`;if(triple.length)html+=`<div style="font-size:11px;font-weight:700;color:#f0c040;margin-bottom:8px">🏆 ${maxScore>1?'Triple confirmação':'Números em atraso'}</div><div class="adv-triple-balls">${triple.map(n=>renderBall(n,maxScore)).join('')}</div>`;if(double.length)html+=`<div style="font-size:11px;font-weight:700;color:#00e096;margin:10px 0 8px">🥈 Dupla confirmação (2 critérios)</div><div class="adv-triple-balls">${double.slice(0,10).map(n=>renderBall(n,2)).join('')}</div>`;el.innerHTML=html||`<div class="adv-empty">Nenhuma confirmação ainda</div>`;}
+async function generateTripleAI(){if(!canUseAI()){openPro();return;}incrementDaily();const L=LOTTERIES[currentLottery];document.getElementById('adv-loading').classList.add('show');document.getElementById('adv-results').innerHTML='';document.getElementById('btn-triple').disabled=true;try{const triple=[...pressureNums].filter(n=>setballNums.has(n)&&delayNums.has(n));const double=[...pressureNums].filter(n=>setballNums.has(n)||delayNums.has(n));const hotNums=Object.entries(L.freq||{}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);const prompt=`Especialista em ${L.name} japonesa — Triple Análise.\nRegras: 1 a ${L.total||37}, escolhe ${L.pick||7} por jogo.\n\nDADOS:\n🏆 Triple (pressão+conjunto+atraso): ${triple.join(', ')||'(nenhum)'}\n🥈 Dupla: ${double.slice(0,10).join(', ')||'(calcular)'}\n🌡️ Pressão similar: ${[...pressureNums].join(', ')||'(não disponível para esta loteria)'}\n🎱 Conjunto ${selectedSetball}: ${isSetballSupported()?(SET_DATA[selectedSetball]?.hot.join(', ')||''):'(não disponível para esta loteria)'}\n⏳ Atraso (calculado dos sorteios reais desta loteria): ${[...delayNums].join(', ')||'(nenhum)'}\n📊 Quentes: ${hotNums.join(', ')}\n\nGere 5 jogos priorizando atraso${isSetballSupported()?', pressão e conjunto de bolas':''}.\nJSON sem markdown:\n{"games":[{"nums":[n1,n2,n3,n4,n5,n6,n7],"reason":"max 50 chars","conf":78},{"nums":[...],"reason":"...","conf":74},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":65}]}\nExatamente ${L.pick||7} por jogo, 1 a ${L.total||37}, sem repetição, crescente.`;const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"llama-3.3-70b-versatile",max_tokens:1000,messages:[{role:"user",content:prompt}]})});const data=await res.json();const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';let parsed;try{const clean=text.replace(/```json|```/g,'').trim();parsed=JSON.parse(clean);}catch(_){const match=text.match(/\{[\s\S]*\}/);if(!match)throw new Error('IA retornou: '+text.slice(0,300));parsed=JSON.parse(match[0]);}if(!parsed?.games)throw new Error('Sem jogos na resposta: '+text.slice(0,200));const container=document.getElementById('adv-results');container.innerHTML=`<p class="slabel" style="margin-top:16px">🎯 Jogos Triple IA</p>`;parsed.games.forEach((g,i)=>{const conf=g.conf||75;const cc=conf>=75?'#f0c040':conf>=70?'#00e096':'#4dbfff';const card=document.createElement('div');card.className='result-card';card.style.borderColor='rgba(240,192,64,0.3)';card.innerHTML=`<div class="rc-header"><span class="rc-label">Jogo ${i+1} 🔬</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">Triple ${conf}%</span></div><div class="rc-balls">${g.nums.map(n=>`<div class="rb" style="${getBallStyle(n,L.total||37)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;container.appendChild(card);});showToast('Triple IA gerou 5 jogos! 🔬');}catch(e){
     const msg=e?.message||String(e)||'erro desconhecido';
     const container=document.getElementById('adv-results');
     container.innerHTML=`<div style="background:rgba(255,0,0,.1);border:1px solid rgba(255,0,0,.3);border-radius:12px;padding:14px;font-size:11px;color:#ff6b80;margin-top:12px"><strong>❌ Erro:</strong><br>${msg}</div>`;
     showToast('Erro — veja detalhes abaixo');
   }finally{document.getElementById('adv-loading').classList.remove('show');document.getElementById('btn-triple').disabled=false;if(!isPro)showUsageWarning();}}
-function buildAdvanced(){buildDelayChart();selectSet(selectedSetball);}
-applyTranslations();
-buildPickPanel();
+function buildAdvanced(){
+  const supported=isSetballSupported();
+  const pStep=document.getElementById('adv-step-pressure');
+  const sStep=document.getElementById('adv-step-setball');
+  if(pStep)pStep.style.opacity=supported?'1':'.55';
+  if(sStep)sStep.style.opacity=supported?'1':'.55';
+  buildDelayChart();
+  if(supported){selectSet(selectedSetball);if(document.getElementById('pressure-input').value)analyzePressure();else updateTriple();}
+  else{pressureNums=new Set();setballNums=new Set();selectSet(selectedSetball);analyzePressure();}
+}
+(async()=>{
+  await loadRealDrawData();
+  applyTranslations();
+  buildPickPanel();
+})();
 const urlParams=new URLSearchParams(window.location.search);
 if(urlParams.get('pro')==='success'){isPro=true;localStorage.setItem('jlp_pro','true');showToast('⭐ PRO ativado! Obrigado pela assinatura!');if(typeof gtag!=='undefined')gtag('event','pro_purchased');}
 const lotteryParam=urlParams.get('lottery');
