@@ -706,7 +706,7 @@ function openPro(){document.getElementById('pro-modal').classList.add('show');}
 function closePro(e){if(!e||e.target===document.getElementById('pro-modal'))document.getElementById('pro-modal').classList.remove('show');}
 function startPro(){
   if(typeof gtag!=='undefined')gtag('event','pro_checkout_click',{currency:'JPY',value:600});
-  const STRIPE_URL='https://buy.stripe.com/SEU_LINK_AQUI';
+  const STRIPE_URL='https://buy.stripe.com/test_3cIeVeftd0Vq91w39h87K00';
   if(STRIPE_URL.includes('SEU_LINK')){
     // Modo teste — ativa PRO localmente enquanto Stripe não está configurado
     isPro=true;
