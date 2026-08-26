@@ -488,8 +488,6 @@ const LOTTERIES={
     lastDraws:[{id:3820,date:'11/04/2026',nums:'5391'},{id:3819,date:'10/04/2026',nums:'2847'},{id:3818,date:'09/04/2026',nums:'0162'},{id:3817,date:'08/04/2026',nums:'7395'},{id:3816,date:'07/04/2026',nums:'4821'}],
     prizes:[{hits:'exact',pkey:'pr_exact',value:900000},{hits:'any',pkey:'pr_any',value:93750}]}
 };
-// Recalcula frequência (hot/cold) a partir dos sorteios REAIS carregados,
-// em vez de usar o snapshot fixo que fica desatualizado com o tempo.
 function computeFreqFromDraws(L){
   const total=L.total||37,start=1;
   const freq={};
@@ -505,8 +503,6 @@ function computeDigitFreqFromDraws(L){
   (L.lastDraws||[]).forEach(d=>{d.nums.toString().split('').forEach(ch=>{const n=+ch;if(freq[n]!==undefined)freq[n]++;});});
   return freq;
 }
-// Busca data/lottery-data.json (dados reais, atualizados pela automação ou manualmente)
-// e substitui os dados congelados. Se falhar (offline, arquivo ausente), segue com os dados embutidos.
 async function loadRealDrawData(){
   try{
     const res=await fetch('/data/lottery-data.json');
@@ -524,6 +520,7 @@ async function loadRealDrawData(){
 }
 let currentLottery='loto6',selected=[],selectedDigits={};
 let isPro=localStorage.getItem('jlp_pro')==='true';
+let proToken=localStorage.getItem('jlp_pro_token')||'';
 let dailyCount=parseInt(localStorage.getItem('jlp_daily')||'0');
 let lastDate=localStorage.getItem('jlp_date')||'';
 const FREE_LIMIT=3;
@@ -534,36 +531,29 @@ function selectDigit(pos,n){selectedDigits[pos]=selectedDigits[pos]===n?null:n;d
 function toggleBall(n,el){const L=LOTTERIES[currentLottery],max=L.maxSel||L.pick;if(selected.includes(n)){selected=selected.filter(x=>x!==n);el.classList.remove('selected');}else if(selected.length<max){selected.push(n);el.classList.add('selected');}else{showToast(t('max-nums',{n:max}));return;}updateSelDisplay();}
 function updateSelDisplay(){const sc=document.getElementById('sel-count'),sd=document.getElementById('sel-display');if(!sc||!sd)return;sc.textContent=selected.length;sd.innerHTML='';[...selected].sort((a,b)=>a-b).forEach(n=>{const d=document.createElement('div');d.className='sel-mini';d.textContent=n;sd.appendChild(d);});}
 function clearAll(){selected=[];selectedDigits={};document.querySelectorAll('.ball').forEach(b=>b.classList.remove('selected'));document.querySelectorAll('.digit-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('results').innerHTML='';const sc=document.getElementById('sel-count');if(sc)sc.textContent=(currentLottery==='num3'||currentLottery==='num4')?'---':'0';const sd=document.getElementById('sel-display');if(sd)sd.innerHTML='';}
+function aiHeaders(){const h={"Content-Type":"application/json"};if(proToken)h["X-Pro-Token"]=proToken;return h;}
+function randomSeed(){return Math.random().toString(36).slice(2,10)+'-'+Date.now().toString(36);}
 function getBallStyle(n,total){const z=[['#e63950','#c02040'],['#e68a00','#c06000'],['#2a9a50','#1a7a3a'],['#2070d0','#1050b0'],['#8040c0','#6020a0'],['#40a0c0','#208090'],['#c04040','#a02020']];const i=Math.floor((n-1)/Math.ceil(total/z.length));const c=z[Math.min(i,z.length-1)];return `background:linear-gradient(135deg,${c[0]},${c[1]})`;}
-// ✅ PROMPT v4 — Lustig + soma + primos + faixa baixa + ANÁLISE SAZONAL (mês/dia)
 async function generateBallsAI(L,favs){
   const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);
   const cold=Object.entries(L.freq).sort((a,b)=>a[1]-b[1]).slice(0,8).map(x=>+x[0]);
   const lastDrawsStr=L.lastDraws.slice(0,5).map(d=>Array.isArray(d.nums)?d.nums.join('-'):d.nums).join(' | ');
   const totalMin=L.min||1,totalMax=L.total,pick=L.pick;
   const faixaB=Math.floor(totalMax/3),faixaM=Math.floor(totalMax*2/3),maxPares=Math.ceil(pick/2)+1;
-
-  // Soma flexível por loteria
   const somaRanges={loto7:{min:85,max:195,med:133},loto6:{min:75,max:195,med:132},mini:{min:40,max:120,med:80},bingo5:{min:35,max:95,med:65}};
   const lKey=Object.keys(somaRanges).find(k=>L.name.toLowerCase().replace(' ','').includes(k))||'loto7';
   const soma=somaRanges[lKey];
   const lastSums=L.lastDraws.slice(0,5).map(d=>Array.isArray(d.nums)?d.nums.reduce((a,b)=>a+b,0):0).filter(s=>s>0);
-
-  // Números primos
   const isPrime=n=>{if(n<2)return false;for(let i=2;i<=Math.sqrt(n);i++)if(n%i===0)return false;return true;};
   const primes=[...Array(totalMax+1).keys()].filter(n=>n>=totalMin&&isPrime(n));
   const primesIdeal=Math.round(pick*0.4);
   const faixaBaixaMax=Math.floor(totalMax*0.4);
-
-  // ✅ ANÁLISE SAZONAL — mês e dia do sorteio
   const now=new Date();
   const monthNames=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const dayNames=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
   const currentMonth=now.getMonth()+1;
   const currentMonthName=monthNames[now.getMonth()];
   const currentDayName=dayNames[now.getDay()];
-
-  // Dados sazonais por mês (baseados em análise histórica real dos sorteios)
   const seasonalData={
     loto7:{
       1:{hot:[2,7,14,19,25,31,36],soma:138,pares:'47%',note:'Janeiro: dominância de números médios'},
@@ -622,7 +612,6 @@ async function generateBallsAI(L,favs){
       12:{hot:[2,7,12,17,21],soma:59,note:'Dezembro: somas baixas'}
     }
   };
-
   const lKeyS=Object.keys(seasonalData).find(k=>L.name.toLowerCase().replace(' ','').includes(k));
   const seasonal=lKeyS&&seasonalData[lKeyS]?seasonalData[lKeyS][currentMonth]:null;
   const seasonalLine=seasonal?`
@@ -631,11 +620,9 @@ ANÁLISE SAZONAL (${currentMonthName} — ${currentDayName}):
 - Soma média dos sorteios de ${currentMonthName}: ${seasonal.soma}
 - Padrão de ${currentMonthName}: ${seasonal.note}
 - Considere priorizar os números sazonais combinados com os quentes gerais`:'';
-
   const favsLine=favs?`\n- Favoritos do usuário: ${[...favs].sort((a,b)=>a-b).join(', ')}`:'';
   const jogo5=favs?'Lustig Favoritos — mantenha favoritos com soma sazonal controlada':`Sazonal Puro — baseado exclusivamente no histórico de ${currentMonthName}`;
   const numsPlaceholder=Array.from({length:pick},(_,i)=>`n${i+1}`).join(',');
-
   const prompt=`Você é um especialista em análise estatística da loteria ${L.name} do Japão, combinando métodos dos maiores ganhadores com análise sazonal avançada.
 
 CONFIGURAÇÃO:
@@ -667,9 +654,10 @@ ESTRATÉGIAS (uma por jogo):
 IMPORTANTE: Analise os últimos sorteios e o padrão sazonal de ${currentMonthName} para calibrar os jogos. O dia do sorteio é ${currentDayName}-feira.
 
 Responda APENAS com JSON sem markdown:
-{"games":[{"nums":[${numsPlaceholder}],"reason":"método+mês usado, max 50 chars","conf":75},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":64},{"nums":[...],"reason":"...","conf":60}]}`;
+{"games":[{"nums":[${numsPlaceholder}],"reason":"método+mês usado, max 50 chars","conf":75},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":64},{"nums":[...],"reason":"...","conf":60}]}
 
-  const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai/gpt-oss-120b",max_tokens:2000,messages:[{role:"user",content:prompt}]})});
+Seed de aleatoriedade desta geração: ${randomSeed()} — mesmo com os mesmos dados de entrada, varie a escolha específica dos números a cada geração.`;
+  const res=await fetch("/api/ai",{method:"POST",headers:aiHeaders(),body:JSON.stringify({model:"openai/gpt-oss-120b",max_tokens:2000,temperature:1.1,top_p:0.95,messages:[{role:"user",content:prompt}]})});
   const data=await res.json();
   if(data.error)throw new Error('Erro da API: '+(data.error.message||JSON.stringify(data.error)));const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';
   let parsed;
@@ -686,11 +674,11 @@ Responda APENAS com JSON sem markdown:
 }
 async function generateAutoAI(){if(!canUseAI()){openPro();return;}incrementDaily();const btn=document.getElementById('btn-auto');btn.disabled=true;document.getElementById('loading').classList.add('show');document.getElementById('results').innerHTML='';try{const L=LOTTERIES[currentLottery];if(L.type==='numbers')await generateNumbersAI(L);else await generateBallsAI(L,null);showToast(t('generate-ok'));}catch(e){generateFallback(LOTTERIES[currentLottery]);showToast(t('generate-local'));}finally{document.getElementById('loading').classList.remove('show');btn.disabled=false;if(!isPro)showUsageWarning();}}
 async function generateAI(){const L=LOTTERIES[currentLottery];if(L.type==='numbers'){await generateAutoAI();return;}if(selected.length<L.pick){showToast(t('select-min',{n:L.pick}));return;}if(!canUseAI()){openPro();return;}incrementDaily();document.getElementById('loading').classList.add('show');document.getElementById('results').innerHTML='';document.getElementById('btn-ai-btn').disabled=true;try{await generateBallsAI(L,selected);}catch(e){generateFallback(L);}finally{document.getElementById('loading').classList.remove('show');document.getElementById('btn-ai-btn').disabled=false;if(!isPro)showUsageWarning();}}
-async function generateNumbersAI(L){const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const last=L.lastDraws.slice(0,3).map(d=>d.nums).join(', ');const prompt=`Especialista em ${L.name} do Japão. Gere 5 jogos de ${L.digits} dígitos (0-9).\nDígitos mais frequentes: ${hot.join(', ')} | Últimos resultados: ${last}\nVarie as estratégias: frequentes, mistura, raros, distribuição, surpresa.\nResponda APENAS com JSON sem markdown:\n{"games":[{"nums":"${'d'.repeat(L.digits)}","reason":"max 40 chars","conf":70},{"nums":"...","reason":"...","conf":67},{"nums":"...","reason":"...","conf":64},{"nums":"...","reason":"...","conf":60},{"nums":"...","reason":"...","conf":56}]}`;const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai/gpt-oss-120b",max_tokens:1500,messages:[{role:"user",content:prompt}]})});const data=await res.json();if(data.error)throw new Error('Erro da API: '+(data.error.message||JSON.stringify(data.error)));const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';renderNumberResults(JSON.parse(text.replace(/```json|```/g,'').trim()).games,L);}
+async function generateNumbersAI(L){const hot=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const last=L.lastDraws.slice(0,3).map(d=>d.nums).join(', ');const prompt=`Especialista em ${L.name} do Japão. Gere 5 jogos de ${L.digits} dígitos (0-9).\nDígitos mais frequentes: ${hot.join(', ')} | Últimos resultados: ${last}\nVarie as estratégias: frequentes, mistura, raros, distribuição, surpresa.\nResponda APENAS com JSON sem markdown:\n{"games":[{"nums":"${'d'.repeat(L.digits)}","reason":"max 40 chars","conf":70},{"nums":"...","reason":"...","conf":67},{"nums":"...","reason":"...","conf":64},{"nums":"...","reason":"...","conf":60},{"nums":"...","reason":"...","conf":56}]}\n\nSeed de aleatoriedade desta geração: ${randomSeed()} — varie os dígitos escolhidos a cada geração, mesmo com os mesmos dados de entrada.`;const res=await fetch("/api/ai",{method:"POST",headers:aiHeaders(),body:JSON.stringify({model:"openai/gpt-oss-120b",max_tokens:1500,temperature:1.1,top_p:0.95,messages:[{role:"user",content:prompt}]})});const data=await res.json();if(data.error)throw new Error('Erro da API: '+(data.error.message||JSON.stringify(data.error)));const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';renderNumberResults(JSON.parse(text.replace(/```json|```/g,'').trim()).games,L);}
 function generateRandom(){const L=LOTTERIES[currentLottery];if(L.type==='numbers'){renderNumberResults(Array.from({length:5},()=>({nums:Array.from({length:L.digits},()=>Math.floor(Math.random()*10)).join(''),reason:t('random-gen'),conf:Math.floor(Math.random()*15)+48})),L);}else{const all=Array.from({length:L.total},(_,i)=>i+1);renderBallResults(Array.from({length:5},()=>({nums:[...all].sort(()=>.5-Math.random()).slice(0,L.pick).sort((a,b)=>a-b),reason:t('random-gen'),conf:Math.floor(Math.random()*18)+48})),L);}}
 function generateFallback(L){if(L.type==='numbers'){renderNumberResults(Array.from({length:5},(_,i)=>({nums:Array.from({length:L.digits},()=>Math.floor(Math.random()*10)).join(''),reason:t('random-gen'),conf:66-i*3})),L);}else{const pool=selected.length>=L.pick?selected:Array.from({length:L.total},(_,j)=>j+1);renderBallResults(Array.from({length:5},(_,i)=>({nums:[...pool].sort(()=>.5-Math.random()).slice(0,L.pick).sort((a,b)=>a-b),reason:t('random-gen'),conf:66-i*3})),L);}}
-function renderBallResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;games.forEach((g,i)=>{const conf=g.conf||Math.floor(Math.random()*20)+54;const cc=conf>=70?'#00d4aa':conf>=62?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${(g.nums||g.numbers).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});}
-function renderNumberResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;games.forEach((g,i)=>{const conf=g.conf||Math.floor(Math.random()*18)+52;const cc=conf>=68?'#00d4aa':conf>=60?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';const numStr=g.nums.toString().padStart(L.digits,'0');card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${numStr.split('').map(d=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}cc,${L.color}88);font-size:18px;width:44px;height:44px;">${d}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});}
+function renderBallResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;const scoredGames=[];games.forEach((g,i)=>{const nums=g.nums||g.numbers;const conf=computeScore(nums,L)??(g.conf||60);scoredGames.push({nums,score:conf,reason:g.reason||''});const cc=conf>=70?'#00d4aa':conf>=62?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${nums.map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});saveGameHistory({lottery:currentLottery,type:'balls',games:scoredGames});}
+function renderNumberResults(games,L){const c=document.getElementById('results');c.innerHTML=`<p class="slabel" style="margin-top:18px">${t('games-generated')}</p>`;const scoredGames=[];games.forEach((g,i)=>{const numStr=g.nums.toString().padStart(L.digits,'0');const conf=computeDigitScore(numStr,L);scoredGames.push({nums:numStr,score:conf,reason:g.reason||''});const cc=conf>=68?'#00d4aa':conf>=60?'#f0c040':'#ff6b80';const card=document.createElement('div');card.className='result-card';card.innerHTML=`<div class="rc-header"><span class="rc-label">${t('game')} ${i+1}</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">${t('conf')} ${conf}%</span></div><div class="rc-balls">${numStr.split('').map(d=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}cc,${L.color}88);font-size:18px;width:44px;height:44px;">${d}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;c.appendChild(card);});saveGameHistory({lottery:currentLottery,type:'numbers',games:scoredGames});}
 function switchTab(tab){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));document.getElementById(`panel-${tab}`).classList.add('active');document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('active');const nb=document.getElementById(`nav-${tab}`);if(nb)nb.classList.add('active');if(tab==='stats')buildStats();if(tab==='check')buildPrizeTable();if(tab==='guide')buildGuide();if(tab==='advanced')buildAdvanced();}
 function buildStats(){const L=LOTTERIES[currentLottery];const sorted=Object.entries(L.freq).sort((a,b)=>b[1]-a[1]);document.getElementById('hot-balls').innerHTML=sorted.slice(0,7).map(([n])=>`<div class="mini-ball mb-hot">${n}</div>`).join('');document.getElementById('cold-balls').innerHTML=sorted.slice(-7).map(([n])=>`<div class="mini-ball mb-cold">${n}</div>`).join('');const rf={};(L.lastDraws.flatMap(d=>d.nums||[])).forEach(n=>rf[n]=(rf[n]||0)+1);document.getElementById('lucky-balls').innerHTML=Object.entries(rf).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([n])=>`<div class="mini-ball mb-lucky">${n}</div>`).join('');const top=sorted.slice(0,12),maxF=+top[0][1]||1;document.getElementById('freq-chart').innerHTML=top.map(([n,f])=>`<div class="freq-item"><div class="freq-n">${n}</div><div class="freq-wrap"><div class="freq-bar" style="width:${Math.round(+f/maxF*100)}%"></div></div><div class="freq-ct">${f}x</div></div>`).join('');document.getElementById('last-draws').innerHTML=L.lastDraws.map(d=>{let bh;if(L.type==='numbers'){bh=d.nums.split('').map(n=>`<div class="rb" style="background:linear-gradient(135deg,${L.color}aa,${L.color}66);width:34px;height:34px;font-size:16px;">${n}</div>`).join('');}else{bh=(d.nums||[]).map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('');if(d.bonus){if(Array.isArray(d.bonus))d.bonus.forEach(b=>bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">${b}</div>`);else bh+=`<div class="rb rb-bonus" style="border-color:${L.color}60;color:${L.color};">B:${d.bonus}</div>`;}}return `<div class="draw-card"><div class="dc-header"><span class="dc-id">#${d.id}</span><span class="dc-date">${d.date}</span></div><div class="rc-balls">${bh}</div></div>`;}).join('');}
 function buildPrizeTable(){const L=LOTTERIES[currentLottery];const[th1,th2,th3]=lang==='ja'?['一致数','賞','金額']:['Acertos','Prêmio','Valor est.'];document.getElementById('prize-table-section').innerHTML=`<p class="slabel">${t('prize-label')} — ${L.name}</p><div class="stat-card"><table class="prize-table"><tr><th>${th1}</th><th>${th2}</th><th style="text-align:right">${th3}</th></tr>${L.prizes.map(p=>`<tr><td style="font-weight:700;color:var(--active)">${p.hits}</td><td>${t(p.pkey)}</td><td style="text-align:right;font-weight:700;color:${p.value>=1000000?'var(--active)':'var(--text)'}">${formatYen(p.value)}</td></tr>`).join('')}<tr><td colspan="3" style="font-size:10px;color:var(--muted);padding-top:10px">${t('prize-ticket',{p:L.price,d:L.days})}</td></tr></table></div>`;}
@@ -706,17 +694,30 @@ function openPro(){document.getElementById('pro-modal').classList.add('show');}
 function closePro(e){if(!e||e.target===document.getElementById('pro-modal'))document.getElementById('pro-modal').classList.remove('show');}
 function startPro(){
   if(typeof gtag!=='undefined')gtag('event','pro_checkout_click',{currency:'JPY',value:600});
-  const STRIPE_URL='https://buy.stripe.com/test_3cIeVeftd0Vq91w39h87K00';
-  if(STRIPE_URL.includes('SEU_LINK')){
-    // Modo teste — ativa PRO localmente enquanto Stripe não está configurado
-    isPro=true;
-    localStorage.setItem('jlp_pro','true');
-    document.getElementById('pro-modal').classList.remove('show');
-    showToast('⭐ PRO ativado! (modo teste)');
-    if(typeof gtag!=='undefined')gtag('event','pro_test_activated');
-  } else {
-    window.open(STRIPE_URL,'_blank');
-    document.getElementById('pro-modal').classList.remove('show');
+  // ⚠️ IMPORTANTE: troque pelo link de PRODUÇÃO do Stripe (Payment Link ou Checkout Session)
+  // assim que a verificação da conta terminar. Nunca deixe um link "test_..." em produção.
+  const STRIPE_URL='https://buy.stripe.com/SEU_LINK_DE_PRODUCAO_AQUI';
+  window.open(STRIPE_URL,'_blank');
+  document.getElementById('pro-modal').classList.remove('show');
+}
+// Verifica o status PRO no servidor (nunca confia só no localStorage).
+// Requer um endpoint /api/verify-pro que confirme a assinatura no Stripe
+// (por session_id do checkout ou por e-mail/customer_id) e devolva {pro:true/false}.
+// Enquanto esse endpoint não existir, isPro fica sempre false por padrão de segurança.
+async function verifyProWithServer(sessionId){
+  try{
+    const url=sessionId?`/api/verify-pro?session_id=${encodeURIComponent(sessionId)}`:'/api/verify-pro';
+    const res=await fetch(url);
+    if(!res.ok)return false;
+    const data=await res.json();
+    if(data.pro&&data.token){
+      localStorage.setItem('jlp_pro_token',data.token);
+      proToken=data.token;
+    }
+    return !!data.pro;
+  }catch(e){
+    console.warn('[PRO] verificação de servidor indisponível:',e.message);
+    return false;
   }
 }
 const GUIDE={
@@ -755,8 +756,6 @@ const SET_DATA={A:{hot:[1,12,13,15,22,27,30,35],warm:[3,7,10,17,23,28],note:'Fav
 const PRESSURE_HISTORY=[{date:'01/05/2015',draw:107,hpa:1011.8,nums:[3,8,9,13,17,27,33]},{date:'22/05/2015',draw:110,hpa:1010.5,nums:[4,12,22,30,31,35,36]},{date:'01/05/2020',draw:369,hpa:1010.9,nums:[16,19,22,25,26,33,37]},{date:'29/05/2020',draw:374,hpa:1010.6,nums:[1,5,9,14,20,24,29]},{date:'23/05/2025',draw:640,hpa:1010.3,nums:[2,11,15,22,28,33,36]}];
 let delayData={};
 let pressureNums=new Set(),setballNums=new Set(),delayNums=new Set(),selectedSetball='F';
-// Recurso "Conjunto de Bolas (セット球)" e histórico de pressão hoje só têm dados reais para a Loto 7 (37 bolas).
-// Para as demais loterias, esses dois critérios ficam desativados (mostram aviso) e o Triple usa apenas o Atraso, calculado a partir dos dados reais da loteria selecionada.
 function isSetballSupported(){return currentLottery==='loto7';}
 async function fetchPressureAuto(){
   const btn=document.getElementById('btn-auto-pressure');
@@ -764,7 +763,6 @@ async function fetchPressureAuto(){
   btn.disabled=true;
   status.textContent='🌡️ Buscando pressão em Tóquio...';
   status.style.color='var(--muted)';
-
   const apis=[
     async()=>{
       const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.6762&longitude=139.7690&current=surface_pressure,pressure_msl&timezone=Asia%2FTokyo',{mode:'cors'});
@@ -788,12 +786,10 @@ async function fetchPressureAuto(){
       return Math.round(p*10)/10;
     }
   ];
-
   let pressure=null;
   for(const api of apis){
     try{pressure=await api();if(pressure)break;}catch(e){continue;}
   }
-
   if(pressure){
     document.getElementById('pressure-input').value=pressure;
     status.textContent=`✅ Pressão atual em Tóquio (Kyobashi): ${pressure} hPa`;
@@ -810,7 +806,6 @@ async function fetchPressureAuto(){
   }
   btn.disabled=false;
 }
-
 function analyzePressure(){
   if(!isSetballSupported()){pressureNums=new Set();document.getElementById('pressure-result').innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">📡 O histórico de pressão hoje só cobre a Loto 7. Para ${LOTTERIES[currentLottery].name}, este critério fica fora do Triple até termos dados reais dessa loteria.</div></div>`;updateTriple();return;}
   const val=parseFloat(document.getElementById('pressure-input').value);if(!val||isNaN(val)){showToast('Insira a pressão');return;}const matches=PRESSURE_HISTORY.filter(p=>Math.abs(p.hpa-val)<=1.5);pressureNums=new Set();const freq={};matches.forEach(m=>m.nums.forEach(n=>{freq[n]=(freq[n]||0)+1;pressureNums.add(n);}));const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);const el=document.getElementById('pressure-result');if(!matches.length){el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Nenhum dado histórico nessa faixa (±1.5 hPa). Tente pressão entre 1009–1013.</div></div>`;}else{el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div class="adv-ref-title">${matches.length} sorteio(s) com pressão similar (±1.5 hPa)</div><div class="adv-set-nums">${sorted.slice(0,10).map(([n,f])=>`<span class="adv-num-tag ${f>=2?'hot':'warm'}">${n}${f>=2?` ×${f}`:''}</span>`).join('')}</div><div style="font-size:10px;color:var(--muted);margin-top:6px">${matches.map(m=>`#${m.draw} (${m.date}) · ${m.hpa}hPa`).join(' · ')}</div></div>`;}updateTriple();
@@ -821,8 +816,7 @@ function selectSet(s){
   if(!isSetballSupported()){setballNums=new Set();const el=document.getElementById('setball-result');if(el)el.innerHTML=`<div class="adv-ref-box"><div style="color:var(--muted);font-size:12px">📡 O conjunto de bolas (セット球) hoje só tem dados reais para a Loto 7. Para ${LOTTERIES[currentLottery].name}, este critério fica fora do Triple.</div></div>`;updateTriple();return;}
   const data=SET_DATA[s];setballNums=new Set([...data.hot,...data.warm]);const el=document.getElementById('setball-result');if(!el)return;el.innerHTML=`<div class="adv-ref-box"><div class="adv-ref-title">Conjunto ${s} — Números favorecidos</div><div class="adv-set-nums">${data.hot.map(n=>`<span class="adv-num-tag hot">${n}</span>`).join('')}${data.warm.map(n=>`<span class="adv-num-tag warm">${n}</span>`).join('')}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">${data.note}</div></div>`;updateTriple();
 }
-function calcDelayForCurrentLottery(){
-  const L=LOTTERIES[currentLottery];
+function calcDelayForLottery(L){
   const total=L.total||37;
   const draws=L.lastDraws||[];
   const result={};
@@ -836,6 +830,63 @@ function calcDelayForCurrentLottery(){
   for(let i=1;i<=total;i++)if(result[i]===undefined)result[i]=maxAtraso;
   return result;
 }
+function calcDelayForCurrentLottery(){return calcDelayForLottery(LOTTERIES[currentLottery]);}
+// ✅ Score 0–100 determinístico — calculado no cliente a partir de dados reais
+// (frequência histórica, atraso, soma esperada por hipergeométrica, paridade e primos).
+// Substitui o "conf" que antes vinha inventado pela IA — mesma entrada sempre dá o mesmo score.
+function isPrimeNum(n){if(n<2)return false;for(let i=2;i<=Math.sqrt(n);i++)if(n%i===0)return false;return true;}
+function computeScore(nums,L){
+  if(!Array.isArray(nums)||!nums.length)return null;
+  const freq=L.freq||{};
+  const freqVals=Object.values(freq);
+  if(!freqVals.length)return 50;
+  const maxFreq=Math.max(...freqVals),minFreq=Math.min(...freqVals);
+  const delay=calcDelayForLottery(L);
+  const delayVals=Object.values(delay);
+  const maxDelay=Math.max(...delayVals)||1;
+  const N=L.total||37,k=L.pick||nums.length;
+  const meanSum=k*(N+1)/2;
+  const varSum=k*(N-k)*(N+1)/12;
+  const stdSum=Math.sqrt(Math.max(varSum,1));
+  const sum=nums.reduce((a,b)=>a+b,0);
+  const sumScore=Math.max(0,1-Math.abs(sum-meanSum)/(stdSum*2.5));
+  const primeCount=nums.filter(isPrimeNum).length;
+  const idealPrimes=k*0.35;
+  const primeScore=Math.max(0,1-Math.abs(primeCount-idealPrimes)/k);
+  const evenRatio=nums.filter(n=>n%2===0).length/k;
+  const evenScore=Math.max(0,1-Math.abs(evenRatio-0.5)*2);
+  let freqScore=0,delayScore=0;
+  nums.forEach(n=>{
+    const f=freq[n]??minFreq;
+    freqScore+=(maxFreq>minFreq)?(f-minFreq)/(maxFreq-minFreq):0.5;
+    delayScore+=(delay[n]??0)/maxDelay;
+  });
+  freqScore/=nums.length;delayScore/=nums.length;
+  const raw=freqScore*0.25+delayScore*0.25+sumScore*0.25+evenScore*0.15+primeScore*0.10;
+  return Math.round(Math.min(96,Math.max(38,raw*100)));
+}
+function computeDigitScore(numStr,L){
+  const freq=L.freq||{};
+  const vals=Object.values(freq);
+  if(!vals.length)return 50;
+  const max=Math.max(...vals),min=Math.min(...vals);
+  let score=0;
+  numStr.toString().split('').forEach(ch=>{const f=freq[+ch]??min;score+=(max>min)?(f-min)/(max-min):0.5;});
+  score/=numStr.toString().length;
+  return Math.round(Math.min(90,Math.max(40,40+score*50)));
+}
+// ✅ Scaffold de backtesting — guarda os jogos gerados com timestamp e critérios,
+// pra depois comparar com o sorteio real e medir se o Score realmente correlaciona com acertos.
+function saveGameHistory(entry){
+  try{
+    const key='jlp_history';
+    const arr=JSON.parse(localStorage.getItem(key)||'[]');
+    arr.push({ts:Date.now(),...entry});
+    while(arr.length>300)arr.shift();
+    localStorage.setItem(key,JSON.stringify(arr));
+  }catch(e){console.warn('[histórico] falha ao salvar:',e.message);}
+}
+function getGameHistory(){try{return JSON.parse(localStorage.getItem('jlp_history')||'[]');}catch(e){return [];}}
 function buildDelayChart(){
   const L=LOTTERIES[currentLottery];
   delayData=calcDelayForCurrentLottery();
@@ -850,7 +901,7 @@ function buildDelayChart(){
 }
 function addDelay(){const L=LOTTERIES[currentLottery];const total=L.total||37;const n=parseInt(document.getElementById('delay-num-input').value);const r=parseInt(document.getElementById('delay-rounds-input').value);if(!n||!r||n<1||n>total){showToast(`Insira número entre 1 e ${total}`);return;}delayData[n]=r;document.getElementById('delay-num-input').value='';document.getElementById('delay-rounds-input').value='';buildDelayChart();}
 function updateTriple(){const L=LOTTERIES[currentLottery];const allNums=Array.from({length:L.total||37},(_,i)=>i+1);const scores={};allNums.forEach(n=>{let score=0;if(pressureNums.has(n))score++;if(setballNums.has(n))score++;if(delayNums.has(n))score++;if(score>0)scores[n]=score;});const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);const maxScore=isSetballSupported()?3:1;const triple=sorted.filter(([,s])=>s===maxScore).map(([n])=>+n);const double=sorted.filter(([,s])=>s===maxScore-1&&maxScore>1).map(([n])=>+n);const el=document.getElementById('triple-result');if(!sorted.length){el.innerHTML=`<div class="adv-empty">Preencha os critérios acima para ver os números com confirmação</div>`;return;}const renderBall=(n,score)=>{const colors=['#e63950','#e68a00','#2a9a50','#2070d0','#8040c0','#40a0c0'];const ci=Math.floor((n-1)/Math.ceil((L.total||37)/colors.length));const c=colors[Math.min(ci,colors.length-1)];return `<div class="adv-triple-wrap"><div class="adv-triple-ball" style="background:linear-gradient(135deg,${c},${c}aa)">${n}</div><div class="adv-triple-badge">${'⭐'.repeat(score)}</div></div>`;};let html='';if(!isSetballSupported())html+=`<div style="font-size:11px;color:var(--muted);margin-bottom:8px">📡 Para ${L.name}, apenas o critério de Atraso está disponível hoje (pressão e conjunto de bolas são exclusivos da Loto 7).</div>`;if(triple.length)html+=`<div style="font-size:11px;font-weight:700;color:#f0c040;margin-bottom:8px">🏆 ${maxScore>1?'Triple confirmação':'Números em atraso'}</div><div class="adv-triple-balls">${triple.map(n=>renderBall(n,maxScore)).join('')}</div>`;if(double.length)html+=`<div style="font-size:11px;font-weight:700;color:#00e096;margin:10px 0 8px">🥈 Dupla confirmação (2 critérios)</div><div class="adv-triple-balls">${double.slice(0,10).map(n=>renderBall(n,2)).join('')}</div>`;el.innerHTML=html||`<div class="adv-empty">Nenhuma confirmação ainda</div>`;}
-async function generateTripleAI(){if(!canUseAI()){openPro();return;}incrementDaily();const L=LOTTERIES[currentLottery];document.getElementById('adv-loading').classList.add('show');document.getElementById('adv-results').innerHTML='';document.getElementById('btn-triple').disabled=true;try{const triple=[...pressureNums].filter(n=>setballNums.has(n)&&delayNums.has(n));const double=[...pressureNums].filter(n=>setballNums.has(n)||delayNums.has(n));const hotNums=Object.entries(L.freq||{}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);const prompt=`Especialista em ${L.name} japonesa — Triple Análise.\nRegras: 1 a ${L.total||37}, escolhe ${L.pick||7} por jogo.\n\nDADOS:\n🏆 Triple (pressão+conjunto+atraso): ${triple.join(', ')||'(nenhum)'}\n🥈 Dupla: ${double.slice(0,10).join(', ')||'(calcular)'}\n🌡️ Pressão similar: ${[...pressureNums].join(', ')||'(não disponível para esta loteria)'}\n🎱 Conjunto ${selectedSetball}: ${isSetballSupported()?(SET_DATA[selectedSetball]?.hot.join(', ')||''):'(não disponível para esta loteria)'}\n⏳ Atraso (calculado dos sorteios reais desta loteria): ${[...delayNums].join(', ')||'(nenhum)'}\n📊 Quentes: ${hotNums.join(', ')}\n\nGere 5 jogos priorizando atraso${isSetballSupported()?', pressão e conjunto de bolas':''}.\nJSON sem markdown:\n{"games":[{"nums":[n1,n2,n3,n4,n5,n6,n7],"reason":"max 50 chars","conf":78},{"nums":[...],"reason":"...","conf":74},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":65}]}\nExatamente ${L.pick||7} por jogo, 1 a ${L.total||37}, sem repetição, crescente.`;const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai/gpt-oss-120b",max_tokens:2000,messages:[{role:"user",content:prompt}]})});const data=await res.json();if(data.error)throw new Error('Erro da API: '+(data.error.message||JSON.stringify(data.error)));const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';let parsed;try{const clean=text.replace(/```json|```/g,'').trim();parsed=JSON.parse(clean);}catch(_){const match=text.match(/\{[\s\S]*\}/);if(!match)throw new Error('IA retornou: '+text.slice(0,300));parsed=JSON.parse(match[0]);}if(!parsed?.games)throw new Error('Sem jogos na resposta: '+text.slice(0,200));const container=document.getElementById('adv-results');container.innerHTML=`<p class="slabel" style="margin-top:16px">🎯 Jogos Triple IA</p>`;parsed.games.forEach((g,i)=>{const conf=g.conf||75;const cc=conf>=75?'#f0c040':conf>=70?'#00e096':'#4dbfff';const card=document.createElement('div');card.className='result-card';card.style.borderColor='rgba(240,192,64,0.3)';card.innerHTML=`<div class="rc-header"><span class="rc-label">Jogo ${i+1} 🔬</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">Triple ${conf}%</span></div><div class="rc-balls">${g.nums.map(n=>`<div class="rb" style="${getBallStyle(n,L.total||37)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;container.appendChild(card);});showToast('Triple IA gerou 5 jogos! 🔬');}catch(e){
+async function generateTripleAI(){if(!canUseAI()){openPro();return;}incrementDaily();const L=LOTTERIES[currentLottery];document.getElementById('adv-loading').classList.add('show');document.getElementById('adv-results').innerHTML='';document.getElementById('btn-triple').disabled=true;try{const triple=[...pressureNums].filter(n=>setballNums.has(n)&&delayNums.has(n));const double=[...pressureNums].filter(n=>setballNums.has(n)||delayNums.has(n));const hotNums=Object.entries(L.freq||{}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>+x[0]);const prompt=`Especialista em ${L.name} japonesa — Triple Análise.\nRegras: 1 a ${L.total||37}, escolhe ${L.pick||7} por jogo.\n\nDADOS:\n🏆 Triple (pressão+conjunto+atraso): ${triple.join(', ')||'(nenhum)'}\n🥈 Dupla: ${double.slice(0,10).join(', ')||'(calcular)'}\n🌡️ Pressão similar: ${[...pressureNums].join(', ')||'(não disponível para esta loteria)'}\n🎱 Conjunto ${selectedSetball}: ${isSetballSupported()?(SET_DATA[selectedSetball]?.hot.join(', ')||''):'(não disponível para esta loteria)'}\n⏳ Atraso (calculado dos sorteios reais desta loteria): ${[...delayNums].join(', ')||'(nenhum)'}\n📊 Quentes: ${hotNums.join(', ')}\n\nGere 5 jogos priorizando atraso${isSetballSupported()?', pressão e conjunto de bolas':''}.\nJSON sem markdown:\n{"games":[{"nums":[n1,n2,n3,n4,n5,n6,n7],"reason":"max 50 chars","conf":78},{"nums":[...],"reason":"...","conf":74},{"nums":[...],"reason":"...","conf":71},{"nums":[...],"reason":"...","conf":68},{"nums":[...],"reason":"...","conf":65}]}\nExatamente ${L.pick||7} por jogo, 1 a ${L.total||37}, sem repetição, crescente.\n\nSeed de aleatoriedade desta geração: ${randomSeed()} — varie a escolha específica dos números a cada geração, mesmo com os mesmos dados de entrada.`;const res=await fetch("/api/ai",{method:"POST",headers:aiHeaders(),body:JSON.stringify({model:"openai/gpt-oss-120b",max_tokens:2000,temperature:1.1,top_p:0.95,messages:[{role:"user",content:prompt}]})});const data=await res.json();if(data.error)throw new Error('Erro da API: '+(data.error.message||JSON.stringify(data.error)));const text=data.choices?.[0]?.message?.content||data.content?.map(c=>c.text||'').join('')||'';let parsed;try{const clean=text.replace(/```json|```/g,'').trim();parsed=JSON.parse(clean);}catch(_){const match=text.match(/\{[\s\S]*\}/);if(!match)throw new Error('IA retornou: '+text.slice(0,300));parsed=JSON.parse(match[0]);}if(!parsed?.games)throw new Error('Sem jogos na resposta: '+text.slice(0,200));const container=document.getElementById('adv-results');container.innerHTML=`<p class="slabel" style="margin-top:16px">🎯 Jogos Triple IA</p>`;parsed.games.forEach((g,i)=>{const conf=computeScore(g.nums,L)??(g.conf||75);const cc=conf>=75?'#f0c040':conf>=70?'#00e096':'#4dbfff';const card=document.createElement('div');card.className='result-card';card.style.borderColor='rgba(240,192,64,0.3)';card.innerHTML=`<div class="rc-header"><span class="rc-label">Jogo ${i+1} 🔬</span><span class="rc-conf" style="color:${cc};border-color:${cc}50;background:${cc}12">Triple ${conf}%</span></div><div class="rc-balls">${g.nums.map(n=>`<div class="rb" style="${getBallStyle(n,L.total||37)}">${n}</div>`).join('')}</div><div class="rc-meta">${g.reason||''}</div>`;container.appendChild(card);});saveGameHistory({lottery:currentLottery,type:'triple',games:parsed.games.map(g=>({nums:g.nums,score:computeScore(g.nums,L)??g.conf,reason:g.reason||''}))});showToast('Triple IA gerou 5 jogos! 🔬');}catch(e){
     const msg=e?.message||String(e)||'erro desconhecido';
     const container=document.getElementById('adv-results');
     container.innerHTML=`<div style="background:rgba(255,0,0,.1);border:1px solid rgba(255,0,0,.3);border-radius:12px;padding:14px;font-size:11px;color:#ff6b80;margin-top:12px"><strong>❌ Erro:</strong><br>${msg}</div>`;
@@ -872,7 +923,21 @@ function buildAdvanced(){
   buildPickPanel();
 })();
 const urlParams=new URLSearchParams(window.location.search);
-if(urlParams.get('pro')==='success'){isPro=true;localStorage.setItem('jlp_pro','true');showToast('⭐ PRO ativado! Obrigado pela assinatura!');if(typeof gtag!=='undefined')gtag('event','pro_purchased');}
+// Nunca ativa PRO só por causa da URL — isso é falsificável por qualquer pessoa.
+// O Stripe deve redirecionar com ?session_id={CHECKOUT_SESSION_ID}; validamos no servidor.
+const stripeSessionId=urlParams.get('session_id');
+if(urlParams.get('pro')==='success'||stripeSessionId){
+  verifyProWithServer(stripeSessionId).then(ok=>{
+    if(ok){
+      isPro=true;
+      localStorage.setItem('jlp_pro','true');
+      showToast('⭐ PRO ativado! Obrigado pela assinatura!');
+      if(typeof gtag!=='undefined')gtag('event','pro_purchased');
+    }else{
+      showToast('⚠️ Não conseguimos confirmar seu pagamento ainda. Se você assinou, aguarde alguns instantes e recarregue.');
+    }
+  });
+}
 const lotteryParam=urlParams.get('lottery');
 if(lotteryParam&&LOTTERIES[lotteryParam]){const btn=document.querySelector(`[data-id="${lotteryParam}"]`);if(btn)selectLottery(lotteryParam,btn);}
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('[PWA] SW:',reg.scope)).catch(err=>console.warn('[PWA]',err));});}
