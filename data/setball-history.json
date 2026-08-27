@@ -1,0 +1,9 @@
+{
+  "_instructions": "Fonte separada para dados de Set Ball. Preencha somente com dados verificáveis; o app não deve tratar estimativas como fatos.",
+  "source": "manual/verified-data-required",
+  "updatedAt": "2026-08-27",
+  "lottery": "loto7",
+  "sets": {},
+  "current": null,
+  "next": []
+}
