@@ -312,7 +312,7 @@ h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background
     <div class="adv-step" id="adv-step-pressure">
       <div class="adv-step-header"><div class="adv-step-num">1</div><div><div class="adv-step-title" data-t="adv-s1-title">🌡️ Pressão Atmosférica</div><div class="adv-step-desc" data-t="adv-s1-desc">Ar mais denso afeta a trajetória das bolas</div></div></div>
       <div class="adv-input-row"><input class="adv-input" id="pressure-input" type="number" step="0.1" placeholder="Ex: 1011.8"><select class="adv-select" id="pressure-unit"><option value="local">hPa (local)</option><option value="sea">hPa (nível mar)</option></select></div>
-      <div class="adv-ref-box"><div class="adv-ref-title">📋 Referência histórica (Kyobashi, Tóquio)</div><div class="adv-ref-grid"><div class="adv-ref-item"><span class="adv-ref-date">01/05/2015</span><span class="adv-ref-val">1011.8 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">01/05/2020</span><span class="adv-ref-val">1010.9 hPa</span></div><div class="adv-ref-item"><span class="adv-ref-date">23/05/2025</span><span class="adv-ref-val">1010.3 hPa</span></div></div><div class="adv-ref-note" id="pressure-ref-note">Números quentes: 03 · 08 · 09 · 13 · 17 · 27 · 33</div></div>
+      <div class="adv-ref-box"><div class="adv-ref-title">📋 Histórico de pressão (dados reais)</div><div class="adv-ref-note" id="pressure-ref-note">Carregando dados históricos...</div></div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
   <button class="adv-btn" onclick="fetchPressureAuto()" id="btn-auto-pressure" style="flex:1;background:linear-gradient(135deg,#00b4d8,#0077b6)">🌡️ Buscar pressão automática</button>
   <button class="adv-btn" onclick="analyzePressure()" style="flex:1">🔍 Analisar manual</button>
@@ -322,7 +322,7 @@ h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background
     </div>
     <div class="adv-step" id="adv-step-setball">
       <div class="adv-step-header"><div class="adv-step-num">2</div><div><div class="adv-step-title" data-t="adv-s2-title">🎱 Conjunto de Bolas (セット球)</div><div class="adv-step-desc" data-t="adv-s2-desc">Cada conjunto A–J tem tendência própria</div></div></div>
-      <div class="adv-setball-grid"><div class="adv-setball"><div class="adv-setball-label">Último sorteio</div><div class="adv-setball-val" id="last-set-val">E</div><div class="adv-setball-note">#673 · 17/04/2026</div></div><div class="adv-setball"><div class="adv-setball-label">Previsão próximo</div><div class="adv-setball-val" style="color:var(--active)">F/G</div><div class="adv-setball-note">Ciclo A→J · 10 sorteios</div></div></div>
+      <div class="adv-setball-grid"><div class="adv-setball"><div class="adv-setball-label">Último sorteio</div><div class="adv-setball-val" id="last-set-val">—</div><div class="adv-setball-note" id="last-set-note">Dados não carregados</div></div><div class="adv-setball"><div class="adv-setball-label">Próximo</div><div class="adv-setball-val" id="next-set-val" style="color:var(--active)">—</div><div class="adv-setball-note" id="next-set-note">Somente com dados verificáveis</div></div></div>
       <div class="adv-sets-row"><button class="adv-set-btn" onclick="selectSet('A')">A</button><button class="adv-set-btn" onclick="selectSet('B')">B</button><button class="adv-set-btn" onclick="selectSet('C')">C</button><button class="adv-set-btn" onclick="selectSet('D')">D</button><button class="adv-set-btn" onclick="selectSet('E')">E</button><button class="adv-set-btn active" onclick="selectSet('F')">F</button><button class="adv-set-btn" onclick="selectSet('G')">G</button><button class="adv-set-btn" onclick="selectSet('H')">H</button><button class="adv-set-btn" onclick="selectSet('I')">I</button><button class="adv-set-btn" onclick="selectSet('J')">J</button></div>
       <div id="setball-result"></div>
     </div>
@@ -519,7 +519,8 @@ async function loadRealDrawData(){
   }
 }
 let currentLottery='loto6',selected=[],selectedDigits={};
-let isPro=localStorage.getItem('jlp_pro')==='true';
+let isPro=false;
+let proVerifiedAt=0;
 let proToken=localStorage.getItem('jlp_pro_token')||'';
 let dailyCount=parseInt(localStorage.getItem('jlp_daily')||'0');
 let lastDate=localStorage.getItem('jlp_date')||'';
@@ -554,72 +555,28 @@ async function generateBallsAI(L,favs){
   const currentMonth=now.getMonth()+1;
   const currentMonthName=monthNames[now.getMonth()];
   const currentDayName=dayNames[now.getDay()];
-  const seasonalData={
-    loto7:{
-      1:{hot:[2,7,14,19,25,31,36],soma:138,pares:'47%',note:'Janeiro: dominância de números médios'},
-      2:{hot:[3,8,15,21,27,32,35],soma:141,pares:'44%',note:'Fevereiro: equilíbrio par/ímpar'},
-      3:{hot:[1,9,13,20,26,30,34],soma:133,pares:'46%',note:'Março: números baixos mais frequentes'},
-      4:{hot:[2,9,13,20,27,30,34],soma:137,pares:'43%',note:'Abril: ímpares dominantes'},
-      5:{hot:[2,8,9,13,20,27,28],soma:138,pares:'49%',note:'Maio: equilibrado, alta nos 20s'},
-      6:{hot:[2,9,10,13,19,20,33],soma:137,pares:'46%',note:'Junho: números médios dominam'},
-      7:{hot:[1,3,16,18,20,32,34],soma:134,pares:'57%',note:'Julho: pares dominam, faixa média forte'},
-      8:{hot:[4,10,17,22,28,33,36],soma:136,pares:'49%',note:'Agosto: distribuição equilibrada'},
-      9:{hot:[3,9,15,21,27,31,35],soma:141,pares:'44%',note:'Setembro: ímpares em alta'},
-      10:{hot:[5,11,18,23,29,32,36],soma:154,pares:'49%',note:'Outubro: somas mais altas'},
-      11:{hot:[2,8,14,20,26,31,35],soma:136,pares:'47%',note:'Novembro: padrão equilibrado'},
-      12:{hot:[1,7,13,19,25,30,34],soma:129,pares:'44%',note:'Dezembro: somas menores, números baixos'}
-    },
-    loto6:{
-      1:{hot:[6,12,18,24,30,37],soma:133,note:'Janeiro: números médios'},
-      2:{hot:[3,9,15,21,27,37],soma:128,note:'Fevereiro: ímpares'},
-      3:{hot:[5,11,17,23,29,37],soma:122,note:'Março: somas baixas'},
-      4:{hot:[8,14,20,26,32,37],soma:137,note:'Abril: equilibrado'},
-      5:{hot:[2,10,16,22,28,37],soma:115,note:'Maio: números baixos'},
-      6:{hot:[4,11,18,25,32,37],soma:127,note:'Junho: distribuído'},
-      7:{hot:[3,8,14,20,27,37],soma:115,note:'Julho: somas menores'},
-      8:{hot:[7,13,19,25,31,37],soma:132,note:'Agosto: equilibrado'},
-      9:{hot:[1,9,15,21,27,37],soma:110,note:'Setembro: números baixos'},
-      10:{hot:[6,12,18,24,30,37],soma:127,note:'Outubro: médios'},
-      11:{hot:[4,10,16,22,28,37],soma:120,note:'Novembro: equilibrado'},
-      12:{hot:[2,8,14,20,26,37],soma:108,note:'Dezembro: somas baixas'}
-    },
-    mini:{
-      1:{hot:[3,8,13,19,25],soma:68,note:'Janeiro: distribuição média'},
-      2:{hot:[2,9,14,20,26],soma:71,note:'Fevereiro: equilíbrio'},
-      3:{hot:[4,10,15,21,27],soma:77,note:'Março: números médios-altos'},
-      4:{hot:[1,7,12,18,24],soma:62,note:'Abril: baixos dominantes'},
-      5:{hot:[5,11,16,22,28],soma:82,note:'Maio: mais altos'},
-      6:{hot:[3,8,14,19,25],soma:69,note:'Junho: equilibrado'},
-      7:{hot:[2,7,13,18,24],soma:64,note:'Julho: somas menores'},
-      8:{hot:[6,12,17,23,29],soma:87,note:'Agosto: faixa alta'},
-      9:{hot:[1,8,14,20,26],soma:69,note:'Setembro: distribuído'},
-      10:{hot:[4,9,15,21,27],soma:76,note:'Outubro: médios'},
-      11:{hot:[3,10,16,22,28],soma:79,note:'Novembro: equilibrado'},
-      12:{hot:[2,7,12,18,24],soma:63,note:'Dezembro: somas baixas'}
-    },
-    bingo5:{
-      1:{hot:[4,9,13,18,22],soma:66,note:'Janeiro: distribuição média'},
-      2:{hot:[3,8,14,19,23],soma:67,note:'Fevereiro: equilíbrio'},
-      3:{hot:[5,10,15,20,24],soma:74,note:'Março: mais altos'},
-      4:{hot:[2,7,12,17,21],soma:59,note:'Abril: baixos'},
-      5:{hot:[6,11,16,20,25],soma:78,note:'Maio: faixa alta'},
-      6:{hot:[4,9,13,18,22],soma:66,note:'Junho: equilibrado'},
-      7:{hot:[1,6,11,16,21],soma:55,note:'Julho: somas menores'},
-      8:{hot:[7,12,17,21,25],soma:82,note:'Agosto: faixa alta'},
-      9:{hot:[3,8,13,18,22],soma:64,note:'Setembro: distribuído'},
-      10:{hot:[5,10,14,19,24],soma:72,note:'Outubro: médios'},
-      11:{hot:[4,9,15,20,24],soma:72,note:'Novembro: equilibrado'},
-      12:{hot:[2,7,12,17,21],soma:59,note:'Dezembro: somas baixas'}
-    }
-  };
-  const lKeyS=Object.keys(seasonalData).find(k=>L.name.toLowerCase().replace(' ','').includes(k));
-  const seasonal=lKeyS&&seasonalData[lKeyS]?seasonalData[lKeyS][currentMonth]:null;
-  const seasonalLine=seasonal?`
-ANÁLISE SAZONAL (${currentMonthName} — ${currentDayName}):
-- Números mais frequentes em ${currentMonthName} historicamente: ${seasonal.hot.join(', ')}
-- Soma média dos sorteios de ${currentMonthName}: ${seasonal.soma}
-- Padrão de ${currentMonthName}: ${seasonal.note}
-- Considere priorizar os números sazonais combinados com os quentes gerais`:'';
+  // Seasonal statistics are calculated from the real draw history loaded into L.lastDraws.
+  // No hard-coded monthly numbers are used here.
+  function buildSeasonalStats(lottery){
+    const draws=(lottery.lastDraws||[]).filter(d=>Array.isArray(d.nums));
+    const month=now.getMonth()+1;
+    const sameMonth=draws.filter(d=>{const m=String(d.date||'').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);return m&&+m[2]===month;});
+    const pool=sameMonth.length?sameMonth:draws;
+    const freq={}; pool.forEach(d=>d.nums.forEach(n=>freq[n]=(freq[n]||0)+1));
+    const hot=Object.entries(freq).sort((a,b)=>b[1]-a[1]||+a[0]-+b[0]).slice(0,8).map(([n])=>+n);
+    const sums=pool.map(d=>d.nums.reduce((a,b)=>a+b,0));
+    const avg=sums.length?sums.reduce((a,b)=>a+b,0)/sums.length:null;
+    const even=pool.length?pool.reduce((a,d)=>a+d.nums.filter(n=>n%2===0).length,0)/(pool.length*lottery.pick):null;
+    const note=pool.length?`${sameMonth.length?`Base: ${sameMonth.length} sorteio(s) de ${currentMonthName}`:`Base disponível: ${pool.length} sorteio(s); aguardando mais histórico para análise mensal`}. Paridade média: ${even===null?'—':Math.round(even*100)+'%'} pares.`:'Sem histórico suficiente para análise sazonal.';
+    return {hot,soma:avg===null?null:Math.round(avg*10)/10,pares:even===null?null:Math.round(even*100)+'%',note,sample:pool.length};
+  }
+  const seasonal=buildSeasonalStats(L);
+  const seasonalLine=seasonal.hot.length?`
+ANÁLISE SAZONAL CALCULADA (${currentMonthName} — ${currentDayName}):
+- Números mais frequentes na base sazonal: ${seasonal.hot.join(', ')}
+- Soma média da base: ${seasonal.soma??'—'}
+- Padrão: ${seasonal.note}
+- Não trate esta análise como previsão de probabilidade de sorteio.`:'';
   const favsLine=favs?`\n- Favoritos do usuário: ${[...favs].sort((a,b)=>a-b).join(', ')}`:'';
   const jogo5=favs?'Lustig Favoritos — mantenha favoritos com soma sazonal controlada':`Sazonal Puro — baseado exclusivamente no histórico de ${currentMonthName}`;
   const numsPlaceholder=Array.from({length:pick},(_,i)=>`n${i+1}`).join(',');
@@ -696,7 +653,8 @@ function startPro(){
   if(typeof gtag!=='undefined')gtag('event','pro_checkout_click',{currency:'JPY',value:600});
   // ⚠️ IMPORTANTE: troque pelo link de PRODUÇÃO do Stripe (Payment Link ou Checkout Session)
   // assim que a verificação da conta terminar. Nunca deixe um link "test_..." em produção.
-  const STRIPE_URL='https://buy.stripe.com/SEU_LINK_DE_PRODUCAO_AQUI';
+  const STRIPE_URL='__STRIPE_PAYMENT_LINK__';
+  if(STRIPE_URL.includes('__')){showToast('⚠️ Stripe ainda não foi configurado em produção.');return;}
   window.open(STRIPE_URL,'_blank');
   document.getElementById('pro-modal').classList.remove('show');
 }
@@ -752,11 +710,26 @@ const GUIDE={
 };
 function toggleGuide(id){const body=document.getElementById(id);const chev=document.getElementById('chev-'+id);const open=body.style.display==='none';body.style.display=open?'block':'none';if(chev)chev.classList.toggle('open',open);}
 function buildGuide(){const G=GUIDE[lang]||GUIDE.pt;['convini','mizuho','kiosco','online'].forEach(key=>{const stepsEl=document.getElementById('steps-'+key);const tipEl=document.getElementById('tip-'+key);if(stepsEl)stepsEl.innerHTML=(G.steps[key]||[]).map(s=>`<div class="gs">${s.text}${s.note?`<small>${s.note}</small>`:''}</div>`).join('');if(tipEl)tipEl.innerHTML=G.tips[key]||'';});const phraseEl=document.getElementById('phrase-list');if(phraseEl)phraseEl.innerHTML=(G.phrases||[]).map(p=>`<div class="phrase-card"><div class="phrase-jp">${p.jp}</div><div class="phrase-romaji">${p.romaji}</div><div class="phrase-pt">${p.pt}</div></div>`).join('');const formEl=document.getElementById('form-diagram');if(formEl)formEl.innerHTML=(G.formRows||[]).map(r=>`<div class="form-row"><div class="form-label">${r.label}</div><div class="form-dots">${r.dots.map(d=>`<div class="form-dot${d.f?' filled':''}">${d.n}</div>`).join('')}</div></div>`).join('')+(G.formNote?`<div style="font-size:10px;color:var(--muted);margin:10px 14px">${G.formNote}</div>`:'');const redeemEl=document.getElementById('redeem-grid');if(redeemEl)redeemEl.innerHTML=(G.redeem||[]).map(r=>`<div class="redeem-card"><div class="redeem-icon">${r.icon}</div><div><div class="redeem-amount">${r.amount}</div><div class="redeem-where">${r.where}</div><div class="redeem-note">${r.note}</div></div></div>`).join('');const tipsEl=document.getElementById('tips-list');if(tipsEl)tipsEl.innerHTML=(G.culturalTips||[]).map(tip=>`<div class="tip-item"><div class="tip-emoji">${tip.emoji}</div><div><div class="tip-title">${tip.title}</div><div class="tip-desc">${tip.desc}</div></div></div>`).join('');}
-const SET_DATA={A:{hot:[1,12,13,15,22,27,30,35],warm:[3,7,10,17,23,28],note:'Favorece números médios (10–25)'},B:{hot:[2,9,14,19,24,30,33,36],warm:[1,11,20,26,31],note:'Tendência para números baixos e altos'},C:{hot:[4,10,13,16,22,27,29,34],warm:[3,7,19,24,31,37],note:'Distribuição equilibrada'},D:{hot:[3,9,12,15,21,26,31,34],warm:[1,6,18,23,29,37],note:'Favorece números ímpares'},E:{hot:[6,11,15,19,22,28,33,36],warm:[2,9,13,24,30,35],note:'Tendência para números médios-altos'},F:{hot:[5,10,14,20,25,29,33,37],warm:[3,8,17,22,28,34],note:'Favorece extremos (5–10 e 30–37)'},G:{hot:[3,9,13,15,22,27,30,35],warm:[7,11,18,24,29,36],note:'Alta frequência de ímpares baixos'},H:{hot:[4,8,12,18,24,30,33,36],warm:[2,10,16,22,28,35],note:'Favorece pares e números médios'},I:{hot:[1,5,11,16,21,27,31,36],warm:[6,13,19,24,29,34],note:'Distribuição por faixas amplas'},J:{hot:[2,7,13,20,26,31,35,37],warm:[4,10,17,23,28,33],note:'Tendência para extremos e altos'}};
-const PRESSURE_HISTORY=[{date:'01/05/2015',draw:107,hpa:1011.8,nums:[3,8,9,13,17,27,33]},{date:'22/05/2015',draw:110,hpa:1010.5,nums:[4,12,22,30,31,35,36]},{date:'01/05/2020',draw:369,hpa:1010.9,nums:[16,19,22,25,26,33,37]},{date:'29/05/2020',draw:374,hpa:1010.6,nums:[1,5,9,14,20,24,29]},{date:'23/05/2025',draw:640,hpa:1010.3,nums:[2,11,15,22,28,33,36]}];
+let SET_DATA={};
+let SETBALL_META={current:null,next:[]};
+let PRESSURE_HISTORY=[];
+let pressureHistoryLoaded=false;
+let setballHistoryLoaded=false;
 let delayData={};
 let pressureNums=new Set(),setballNums=new Set(),delayNums=new Set(),selectedSetball='F';
-function isSetballSupported(){return currentLottery==='loto7';}
+function isSetballSupported(){return currentLottery==='loto7'&&setballHistoryLoaded;}
+async function loadAdvancedData(){
+  try{
+    const [pRes,sRes]=await Promise.all([fetch('/api/pressure-history'),fetch('/data/setball-history.json')]);
+    if(pRes.ok){const p=await pRes.json();PRESSURE_HISTORY=Array.isArray(p.history)?p.history:[];pressureHistoryLoaded=PRESSURE_HISTORY.length>0;}
+    if(sRes.ok){const s=await sRes.json();SET_DATA=s.sets&&typeof s.sets==='object'?s.sets:{};SETBALL_META={current:s.current||null,next:Array.isArray(s.next)?s.next:[]};setballHistoryLoaded=Object.keys(SET_DATA).length>0;
+      const lc=document.getElementById('last-set-val'),ln=document.getElementById('last-set-note'),nc=document.getElementById('next-set-val'),nn=document.getElementById('next-set-note');
+      if(lc)lc.textContent=SETBALL_META.current?.set||'—'; if(ln)ln.textContent=SETBALL_META.current?`#${SETBALL_META.current.draw||'—'} · ${SETBALL_META.current.date||''}`:'Nenhum dado verificável';
+      if(nc)nc.textContent=SETBALL_META.next.length?SETBALL_META.next.map(x=>x.set).join('/'):'—'; if(nn)nn.textContent=SETBALL_META.next.length?'Base histórica disponível':'Nenhuma previsão automática sem base verificável';
+    }
+    const note=document.getElementById('pressure-ref-note'); if(note)note.textContent=pressureHistoryLoaded?`${PRESSURE_HISTORY.length} registro(s) históricos carregados automaticamente.`:'Sem histórico de pressão disponível no momento.';
+  }catch(e){console.warn('[Triple IA data]',e.message);}
+}
 async function fetchPressureAuto(){
   const btn=document.getElementById('btn-auto-pressure');
   const status=document.getElementById('pressure-auto-status');
@@ -796,25 +769,23 @@ async function fetchPressureAuto(){
     status.style.color='#00d4aa';
     analyzePressure();
   }else{
-    const month=new Date().getMonth();
-    const seasonal=[1021,1018,1014,1010,1009,1008,1006,1007,1013,1018,1020,1022];
-    const fallback=seasonal[month];
-    document.getElementById('pressure-input').value=fallback;
-    status.innerHTML=`⚠️ API indisponível. Usando média histórica de Tóquio para este mês: <strong>${fallback} hPa</strong>`;
+    document.getElementById('pressure-input').value='';
+    status.textContent='⚠️ Não foi possível obter a pressão atual. Digite um valor manualmente.';
     status.style.color='#f0c040';
-    analyzePressure();
+    pressureNums=new Set();
+    updateTriple();
   }
   btn.disabled=false;
 }
 function analyzePressure(){
   if(!isSetballSupported()){pressureNums=new Set();document.getElementById('pressure-result').innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">📡 O histórico de pressão hoje só cobre a Loto 7. Para ${LOTTERIES[currentLottery].name}, este critério fica fora do Triple até termos dados reais dessa loteria.</div></div>`;updateTriple();return;}
-  const val=parseFloat(document.getElementById('pressure-input').value);if(!val||isNaN(val)){showToast('Insira a pressão');return;}const matches=PRESSURE_HISTORY.filter(p=>Math.abs(p.hpa-val)<=1.5);pressureNums=new Set();const freq={};matches.forEach(m=>m.nums.forEach(n=>{freq[n]=(freq[n]||0)+1;pressureNums.add(n);}));const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);const el=document.getElementById('pressure-result');if(!matches.length){el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Nenhum dado histórico nessa faixa (±1.5 hPa). Tente pressão entre 1009–1013.</div></div>`;}else{el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div class="adv-ref-title">${matches.length} sorteio(s) com pressão similar (±1.5 hPa)</div><div class="adv-set-nums">${sorted.slice(0,10).map(([n,f])=>`<span class="adv-num-tag ${f>=2?'hot':'warm'}">${n}${f>=2?` ×${f}`:''}</span>`).join('')}</div><div style="font-size:10px;color:var(--muted);margin-top:6px">${matches.map(m=>`#${m.draw} (${m.date}) · ${m.hpa}hPa`).join(' · ')}</div></div>`;}updateTriple();
+  const val=parseFloat(document.getElementById('pressure-input').value);if(!val||isNaN(val)){showToast('Insira a pressão');return;}if(!PRESSURE_HISTORY.length){pressureNums=new Set();document.getElementById('pressure-result').innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Sem histórico de pressão verificável para comparar.</div></div>`;updateTriple();return;}const matches=PRESSURE_HISTORY.filter(p=>Math.abs(p.hpa-val)<=1.5);pressureNums=new Set();const freq={};matches.forEach(m=>m.nums.forEach(n=>{freq[n]=(freq[n]||0)+1;pressureNums.add(n);}));const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);const el=document.getElementById('pressure-result');if(!matches.length){el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div style="color:var(--muted);font-size:12px">Nenhum dado histórico nessa faixa (±1.5 hPa). Tente pressão entre 1009–1013.</div></div>`;}else{el.innerHTML=`<div class="adv-ref-box" style="margin-top:10px"><div class="adv-ref-title">${matches.length} sorteio(s) com pressão similar (±1.5 hPa)</div><div class="adv-set-nums">${sorted.slice(0,10).map(([n,f])=>`<span class="adv-num-tag ${f>=2?'hot':'warm'}">${n}${f>=2?` ×${f}`:''}</span>`).join('')}</div><div style="font-size:10px;color:var(--muted);margin-top:6px">${matches.map(m=>`#${m.draw} (${m.date}) · ${m.hpa}hPa`).join(' · ')}</div></div>`;}updateTriple();
 }
 function selectSet(s){
   selectedSetball=s;
   document.querySelectorAll('.adv-set-btn').forEach(b=>b.classList.toggle('active',b.textContent===s));
   if(!isSetballSupported()){setballNums=new Set();const el=document.getElementById('setball-result');if(el)el.innerHTML=`<div class="adv-ref-box"><div style="color:var(--muted);font-size:12px">📡 O conjunto de bolas (セット球) hoje só tem dados reais para a Loto 7. Para ${LOTTERIES[currentLottery].name}, este critério fica fora do Triple.</div></div>`;updateTriple();return;}
-  const data=SET_DATA[s];setballNums=new Set([...data.hot,...data.warm]);const el=document.getElementById('setball-result');if(!el)return;el.innerHTML=`<div class="adv-ref-box"><div class="adv-ref-title">Conjunto ${s} — Números favorecidos</div><div class="adv-set-nums">${data.hot.map(n=>`<span class="adv-num-tag hot">${n}</span>`).join('')}${data.warm.map(n=>`<span class="adv-num-tag warm">${n}</span>`).join('')}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">${data.note}</div></div>`;updateTriple();
+  const data=SET_DATA[s];if(!data||!Array.isArray(data.hot)||!Array.isArray(data.warm)){setballNums=new Set();const el=document.getElementById('setball-result');if(el)el.innerHTML=`<div class="adv-ref-box"><div style="color:var(--muted);font-size:12px">Dados verificáveis do conjunto ${s} ainda não foram carregados. O critério fica desativado para evitar previsões baseadas em dados inventados.</div></div>`;updateTriple();return;}setballNums=new Set([...data.hot,...data.warm]);const el=document.getElementById('setball-result');if(!el)return;el.innerHTML=`<div class="adv-ref-box"><div class="adv-ref-title">Conjunto ${s} — Números favorecidos</div><div class="adv-set-nums">${data.hot.map(n=>`<span class="adv-num-tag hot">${n}</span>`).join('')}${data.warm.map(n=>`<span class="adv-num-tag warm">${n}</span>`).join('')}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">${data.note}</div></div>`;updateTriple();
 }
 function calcDelayForLottery(L){
   const total=L.total||37;
@@ -824,7 +795,6 @@ function calcDelayForLottery(L){
   draws.forEach((d,idx)=>{
     const nums=L.type==='numbers'?[]:(d.nums||[]);
     nums.forEach(n=>{if(!seen.has(n)){result[n]=idx+1;seen.add(n);}});
-    if(d.bonus){const bArr=Array.isArray(d.bonus)?d.bonus:[d.bonus];bArr.forEach(b=>{if(!seen.has(b)){result[b]=idx+1;seen.add(b);}});}
   });
   const maxAtraso=draws.length+3;
   for(let i=1;i<=total;i++)if(result[i]===undefined)result[i]=maxAtraso;
@@ -896,7 +866,7 @@ function buildDelayChart(){
   const max=sorted[0]?.[1]||1;
   delayNums=new Set(sorted.filter(([,v])=>v>=Math.max(3,Math.round((L.lastDraws?.length||5)*0.6))).map(([n])=>+n));
   const el=document.getElementById('delay-chart');
-  el.innerHTML=`<div style="margin-bottom:10px">${sorted.map(([n,v])=>`<div class="adv-delay-bar"><div class="adv-delay-n">${n}</div><div class="adv-delay-wrap"><div class="adv-delay-fill" style="width:${Math.round(v/max*100)}%"></div></div><div class="adv-delay-ct">${v}x</div>${delayNums.has(+n)?`<span style="font-size:9px;color:#7c6fff;font-weight:700">HOT</span>`:''}</div>`).join('')}</div>`;
+  el.innerHTML=`<div style="margin-bottom:10px">${sorted.map(([n,v])=>`<div class="adv-delay-bar"><div class="adv-delay-n">${n}</div><div class="adv-delay-wrap"><div class="adv-delay-fill" style="width:${Math.round(v/max*100)}%"></div></div><div class="adv-delay-ct">${v}x</div>${delayNums.has(+n)?`<span style="font-size:9px;color:#7c6fff;font-weight:700">ATRASO</span>`:''}</div>`).join('')}</div>`;
   updateTriple();
 }
 function addDelay(){const L=LOTTERIES[currentLottery];const total=L.total||37;const n=parseInt(document.getElementById('delay-num-input').value);const r=parseInt(document.getElementById('delay-rounds-input').value);if(!n||!r||n<1||n>total){showToast(`Insira número entre 1 e ${total}`);return;}delayData[n]=r;document.getElementById('delay-num-input').value='';document.getElementById('delay-rounds-input').value='';buildDelayChart();}
@@ -919,6 +889,7 @@ function buildAdvanced(){
 }
 (async()=>{
   await loadRealDrawData();
+  await loadAdvancedData();
   applyTranslations();
   buildPickPanel();
 })();
@@ -926,11 +897,10 @@ const urlParams=new URLSearchParams(window.location.search);
 // Nunca ativa PRO só por causa da URL — isso é falsificável por qualquer pessoa.
 // O Stripe deve redirecionar com ?session_id={CHECKOUT_SESSION_ID}; validamos no servidor.
 const stripeSessionId=urlParams.get('session_id');
-if(urlParams.get('pro')==='success'||stripeSessionId){
+if(stripeSessionId){
   verifyProWithServer(stripeSessionId).then(ok=>{
     if(ok){
       isPro=true;
-      localStorage.setItem('jlp_pro','true');
       showToast('⭐ PRO ativado! Obrigado pela assinatura!');
       if(typeof gtag!=='undefined')gtag('event','pro_purchased');
     }else{
