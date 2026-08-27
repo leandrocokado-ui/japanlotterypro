@@ -1,0 +1,12 @@
+{
+  "name": "japan-lottery-pro",
+  "private": true,
+  "type": "module",
+  "description": "Japan Lottery Pro — dados e funções serverless. Front-end é estático (index.html) e não precisa de build.",
+  "scripts": {
+    "update-draws": "node scripts/update-draws.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}
