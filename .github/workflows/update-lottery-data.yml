@@ -1,0 +1,31 @@
+name: Atualizar sorteios (Japan Lottery Pro)
+
+on:
+  schedule:
+    - cron: "30 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Instalar dependência
+        run: npm install cheerio
+      - name: Atualizar sorteios reais
+        run: node scripts/update-draws.js
+      - name: Atualizar conjuntos de bolas (Set Ball)
+        run: node scripts/update-setballs.js
+      - name: Commit se houve mudança
+        run: |
+          git config user.name "lottery-data-bot"
+          git config user.email "actions@github.com"
+          git add data/lottery-data.json data/setball-history.json
+          git diff --cached --quiet || git commit -m "chore: atualizar sorteios automaticamente"
+          git push
