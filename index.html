@@ -519,9 +519,18 @@ async function loadRealDrawData(){
   }
 }
 let currentLottery='loto6',selected=[],selectedDigits={};
+// Token de desbloqueio PRO do desenvolvedor. Troque aqui e na Vercel
+// (DEV_MASTER_TOKEN) se precisar gerar um novo por segurança.
+const DEV_UNLOCK_TOKEN='dev_k7Xm9Qw2Rt5Yv8Nz3Ap6Bc1Ef4Gh0Jd';
 let isPro=false;
 let proVerifiedAt=0;
 let proToken=localStorage.getItem('jlp_pro_token')||'';
+// Restaura o PRO de desenvolvedor a cada carregamento do app (o PWA reinicia
+// isPro=false a cada abertura, então sem isso o desbloqueio "esquecia" depois
+// da primeira sessão mesmo com o token salvo no localStorage).
+if(proToken&&proToken===DEV_UNLOCK_TOKEN){
+  isPro=true;
+}
 let dailyCount=parseInt(localStorage.getItem('jlp_daily')||'0');
 let lastDate=localStorage.getItem('jlp_date')||'';
 const FREE_LIMIT=3;
@@ -934,7 +943,6 @@ if(stripeSessionId){
 // Uso único: abra o link com ?dev_unlock=SEU_TOKEN uma vez neste dispositivo.
 // O token é comparado só no front-end aqui — troque o valor abaixo pelo mesmo
 // que você configurar em DEV_MASTER_TOKEN na Vercel, e nunca compartilhe esse link.
-const DEV_UNLOCK_TOKEN='dev_k7Xm9Qw2Rt5Yv8Nz3Ap6Bc1Ef4Gh0Jd';
 const devUnlock=urlParams.get('dev_unlock');
 if(devUnlock&&devUnlock===DEV_UNLOCK_TOKEN){
   localStorage.setItem('jlp_pro_token',devUnlock);
