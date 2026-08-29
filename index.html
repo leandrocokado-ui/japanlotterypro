@@ -930,6 +930,19 @@ if(stripeSessionId){
     }
   });
 }
+// Acesso PRO permanente para o desenvolvedor via link especial.
+// Uso único: abra o link com ?dev_unlock=SEU_TOKEN uma vez neste dispositivo.
+// O token é comparado só no front-end aqui — troque o valor abaixo pelo mesmo
+// que você configurar em DEV_MASTER_TOKEN na Vercel, e nunca compartilhe esse link.
+const DEV_UNLOCK_TOKEN='dev_k7Xm9Qw2Rt5Yv8Nz3Ap6Bc1Ef4Gh0Jd';
+const devUnlock=urlParams.get('dev_unlock');
+if(devUnlock&&devUnlock===DEV_UNLOCK_TOKEN){
+  localStorage.setItem('jlp_pro_token',devUnlock);
+  proToken=devUnlock;
+  isPro=true;
+  window.history.replaceState({},document.title,window.location.pathname);
+  showToast('⭐ Acesso PRO de desenvolvedor ativado neste dispositivo!');
+}
 const lotteryParam=urlParams.get('lottery');
 if(lotteryParam&&LOTTERIES[lotteryParam]){const btn=document.querySelector(`[data-id="${lotteryParam}"]`);if(btn)selectLottery(lotteryParam,btn);}
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('[PWA] SW:',reg.scope)).catch(err=>console.warn('[PWA]',err));});}
