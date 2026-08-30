@@ -237,7 +237,7 @@ h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background
     </div>
     <div class="jp-flag">🇯🇵</div>
     <div class="brand-badge"><div class="dot"></div><span data-t="badge">TAKARAKUJI — SISTEMA IA</span></div>
-    <h1>Japan<br><span>Lottery Pro</span></h1>
+    <h1 id="jlp-title" onclick="handleTitleTap()">Japan<br><span>Lottery Pro</span></h1>
     <p class="subtitle" data-t="subtitle">6 Loterias Oficiais · Análise por Inteligência Artificial</p>
   </header>
   <div class="lottery-selector">
@@ -943,6 +943,28 @@ if(stripeSessionId){
 // Uso único: abra o link com ?dev_unlock=SEU_TOKEN uma vez neste dispositivo.
 // O token é comparado só no front-end aqui — troque o valor abaixo pelo mesmo
 // que você configurar em DEV_MASTER_TOKEN na Vercel, e nunca compartilhe esse link.
+// Desbloqueio de PRO de desenvolvedor via toque secreto no título (5 toques
+// em 2 segundos). Funciona dentro de QUALQUER contexto de armazenamento —
+// Safari normal ou o ícone instalado na tela inicial — porque não depende de
+// nenhum parâmetro de URL, que os apps instalados no iOS ignoram.
+let titleTapCount=0,titleTapTimer=null;
+function handleTitleTap(){
+  titleTapCount++;
+  clearTimeout(titleTapTimer);
+  titleTapTimer=setTimeout(()=>{titleTapCount=0;},2000);
+  if(titleTapCount>=5){
+    titleTapCount=0;
+    const input=prompt('Código de acesso de desenvolvedor:');
+    if(input&&input.trim()===DEV_UNLOCK_TOKEN){
+      localStorage.setItem('jlp_pro_token',input.trim());
+      proToken=input.trim();
+      isPro=true;
+      showToast('⭐ Acesso PRO de desenvolvedor ativado neste dispositivo!');
+    }else if(input){
+      showToast('❌ Código inválido.');
+    }
+  }
+}
 const devUnlock=urlParams.get('dev_unlock');
 if(devUnlock&&devUnlock===DEV_UNLOCK_TOKEN){
   localStorage.setItem('jlp_pro_token',devUnlock);
