@@ -337,6 +337,7 @@ h1 span{background:linear-gradient(135deg,var(--active),#fff);-webkit-background
       <div class="adv-delay-input-row"><input class="adv-input" id="delay-num-input" type="number" min="1" max="37" placeholder="Número" style="width:100px"><input class="adv-input" id="delay-rounds-input" type="number" min="1" placeholder="Sorteios em atraso" style="flex:1"><button class="adv-btn-sm" onclick="addDelay()">+ Adicionar</button></div>
       <div id="delay-list"></div>
     </div>
+    <div class="adv-step" id="wheeling-panel"></div>
     <div class="adv-step adv-step-highlight">
       <div class="adv-step-header"><div class="adv-step-num" style="background:linear-gradient(135deg,#f0c040,#ff8c42)">🏆</div><div><div class="adv-step-title">🎯 Triple Confirmação</div><div class="adv-step-desc">Números que aparecem nos 3 critérios simultaneamente</div></div></div>
       <div id="triple-result"><div class="adv-empty">Preencha os 3 critérios acima para ver os números com triple confirmação</div></div>
@@ -913,6 +914,151 @@ async function generateTripleAI(){if(!canUseAI()){openPro();return;}incrementDai
     container.innerHTML=`<div style="background:rgba(255,0,0,.1);border:1px solid rgba(255,0,0,.3);border-radius:12px;padding:14px;font-size:11px;color:#ff6b80;margin-top:12px"><strong>❌ Erro:</strong><br>${msg}</div>`;
     showToast('Erro — veja detalhes abaixo');
   }finally{document.getElementById('adv-loading').classList.remove('show');document.getElementById('btn-triple').disabled=false;if(!isPro)showUsageWarning();}}
+/* ============================================================
+   FECHAMENTO MATEMÁTICO (WHEELING)
+   ------------------------------------------------------------
+   Roda 100% no navegador — sem custo de IA, sem chamada de API.
+   Algoritmo guloso de cobertura (greedy set-cover): garante que
+   toda combinação de tamanho "garantia" dentro do grupo escolhido
+   apareça em pelo menos 1 jogo gerado. NÃO é um fechamento
+   certificado matematicamente (como os vendidos comercialmente),
+   e isso é dito claramente na própria UI, pelo mesmo padrão de
+   honestidade usado na pressão atmosférica e no seat ball.
+   ============================================================ */
+let wheelPool=[];
+let wheelGames=[];
+
+function combinations(arr,k){
+  const result=[];const combo=[];
+  function backtrack(start){
+    if(combo.length===k){result.push([...combo]);return;}
+    for(let i=start;i<arr.length;i++){combo.push(arr[i]);backtrack(i+1);combo.pop();}
+  }
+  backtrack(0);
+  return result;
+}
+
+function generateWheel(pool,pick,guarantee){
+  if(guarantee>pick)throw new Error('A garantia não pode ser maior que a quantidade de números por jogo.');
+  if(pool.length<pick)throw new Error('Escolha pelo menos '+pick+' números.');
+  let toCover=combinations(pool,guarantee).map(c=>c.join(','));
+  const toCoverSet=new Set(toCover);
+  const candidates=combinations(pool,pick);
+  const chosenGames=[];
+  while(toCoverSet.size>0){
+    let bestGame=null,bestCoverCount=-1,bestCoveredKeys=null;
+    for(const game of candidates){
+      const gameSubsets=combinations(game,guarantee).map(c=>c.join(','));
+      const coveredNow=gameSubsets.filter(k=>toCoverSet.has(k));
+      if(coveredNow.length>bestCoverCount){bestCoverCount=coveredNow.length;bestGame=game;bestCoveredKeys=coveredNow;}
+    }
+    if(!bestGame||bestCoverCount===0)break;
+    chosenGames.push(bestGame);
+    bestCoveredKeys.forEach(k=>toCoverSet.delete(k));
+  }
+  return chosenGames;
+}
+
+function buildWheelingPanel(){
+  const L=LOTTERIES[currentLottery];
+  const el=document.getElementById('wheeling-panel');
+  if(!el)return;
+  el.innerHTML=`
+    <div class="adv-step-header">
+      <div class="adv-step-num" style="background:linear-gradient(135deg,#00d4aa,#00b088)">🔒</div>
+      <div>
+        <div class="adv-step-title">Fechamento Matemático</div>
+        <div class="adv-step-desc">Cubra mais combinações gastando menos que jogos avulsos</div>
+      </div>
+    </div>
+    <p class="slabel" style="margin-top:6px">📌 Escolha suas dezenas (mínimo ${L.pick+2})</p>
+    <div class="ball-grid" id="wheel-ball-grid"></div>
+    <div class="adv-input-row" style="margin-top:10px">
+      <div style="flex:1">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Garantia (acertos mínimos p/ premiar 1 jogo)</div>
+        <select class="adv-select" id="wheel-guarantee" style="width:100%"></select>
+      </div>
+    </div>
+    <div id="wheel-cost-preview" style="font-size:11px;color:var(--muted);margin:8px 0"></div>
+    <button class="adv-btn" onclick="runWheeling()">🔒 Gerar fechamento</button>
+    <div class="guide-alert" style="margin-top:12px">
+      <div class="guide-alert-icon">ℹ️</div>
+      <div>Isso NÃO aumenta a chance de acertar o sorteio — cada número continua com a mesma probabilidade. O fechamento apenas garante que, SE um número mínimo das suas dezenas sair, pelo menos um dos seus jogos vai conter essa combinação.</div>
+    </div>
+    <div id="wheel-results"></div>
+  `;
+  const grid=document.getElementById('wheel-ball-grid');
+  const cols=L.total<=25?5:L.total<=31?6:7;
+  grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  grid.innerHTML='';
+  wheelPool=[];
+  for(let i=1;i<=L.total;i++){
+    const b=document.createElement('div');
+    b.className='ball';b.id=`wball-${i}`;b.textContent=i;
+    b.onclick=()=>toggleWheelBall(i,b);
+    grid.appendChild(b);
+  }
+  const sel=document.getElementById('wheel-guarantee');
+  sel.innerHTML='';
+  for(let g=Math.min(3,L.pick);g<=L.pick-1;g++){
+    const opt=document.createElement('option');
+    opt.value=g;opt.textContent=`${g} acertos`;
+    sel.appendChild(opt);
+  }
+  updateWheelCostPreview();
+}
+
+function toggleWheelBall(n,el){
+  const idx=wheelPool.indexOf(n);
+  if(idx>=0){wheelPool.splice(idx,1);el.classList.remove('selected');}
+  else{wheelPool.push(n);el.classList.add('selected');}
+  updateWheelCostPreview();
+}
+
+function updateWheelCostPreview(){
+  const L=LOTTERIES[currentLottery];
+  const preview=document.getElementById('wheel-cost-preview');
+  if(!preview)return;
+  if(wheelPool.length<L.pick+1){
+    preview.textContent=`Selecionadas: ${wheelPool.length} — escolha mais números para calcular.`;
+    return;
+  }
+  const totalCombos=combinations(wheelPool,L.pick).length;
+  preview.textContent=`Selecionadas: ${wheelPool.length} · combinações possíveis: ${totalCombos} (o fechamento vai gerar bem menos jogos que isso)`;
+}
+
+function runWheeling(){
+  const L=LOTTERIES[currentLottery];
+  const guarantee=parseInt(document.getElementById('wheel-guarantee').value);
+  const resultsEl=document.getElementById('wheel-results');
+  if(wheelPool.length<L.pick+1){showToast(`Escolha pelo menos ${L.pick+1} números`);return;}
+  const comboCount=combinations(wheelPool,guarantee).length;
+  if(comboCount>3000){showToast('Muitas combinações — reduza a quantidade de dezenas escolhidas');return;}
+  resultsEl.innerHTML=`<div class="loading show"><div class="spinner"></div><span>Calculando cobertura...</span></div>`;
+  setTimeout(()=>{
+    try{
+      wheelGames=generateWheel([...wheelPool].sort((a,b)=>a-b),L.pick,guarantee);
+      const cost=wheelGames.length*L.price;
+      resultsEl.innerHTML=`
+        <p class="slabel" style="margin-top:14px">🎯 ${wheelGames.length} jogo(s) gerado(s)</p>
+        <div class="info-box" style="margin-bottom:10px">
+          Custo total: <strong>${formatYen(cost)}</strong> (${wheelGames.length} × ¥${L.price})<br>
+          Garantia: se ${guarantee} das suas ${wheelPool.length} dezenas saírem no sorteio, pelo menos 1 jogo abaixo vai conter essa combinação completa.
+        </div>
+        ${wheelGames.map((g,i)=>`
+          <div class="result-card">
+            <div class="rc-header"><span class="rc-label">Jogo ${i+1}</span></div>
+            <div class="rc-balls">${g.map(n=>`<div class="rb" style="${getBallStyle(n,L.total)}">${n}</div>`).join('')}</div>
+          </div>
+        `).join('')}
+      `;
+      trackEvent('wheeling_generated',{lottery:currentLottery,pool:wheelPool.length,guarantee,games:wheelGames.length});
+    }catch(e){
+      resultsEl.innerHTML=`<div class="adv-empty">Erro: ${e.message}</div>`;
+    }
+  },50);
+}
+
 function buildAdvanced(){
   const setSupported=isSetballSupported();
   const pressureSupported=isPressureSupported();
@@ -925,6 +1071,7 @@ function buildAdvanced(){
   selectSet(selectedSetball);
   if(!pressureSupported||document.getElementById('pressure-input').value)analyzePressure();
   else updateTriple();
+  buildWheelingPanel();
 }
 (async()=>{
   await loadRealDrawData();
