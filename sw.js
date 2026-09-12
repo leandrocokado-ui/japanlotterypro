@@ -1,57 +1,45 @@
-// Japan Lottery Pro — Service Worker v2
-const CACHE_NAME = 'jlp-cache-v2';
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-];
+const CACHE = 'japan-lottery-pro-v2';
+const APP_SHELL = ['./', './index.html', './manifest.json'];
 
-// Instala e faz cache dos arquivos principais
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS);
-    })
-  );
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)));
   self.skipWaiting();
 });
 
-// Remove caches antigos
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Estratégia: Network first, fallback para cache
 self.addEventListener('fetch', event => {
-  // Não faz cache de chamadas para APIs externas
-  if (event.request.url.includes('anthropic.com') ||
-      event.request.url.includes('open-meteo.com') ||
-      event.request.url.includes('wttr.in') ||
-      event.request.url.includes('stripe.com') ||
-      event.request.url.includes('googletagmanager')) {
+  if (event.request.method !== 'GET') return;
+
+  // HTML shell: sempre busca a versão mais nova na rede primeiro.
+  // Só usa o cache se estiver offline. Isso evita servir uma versão antiga
+  // depois de um novo deploy.
+  const isHtmlShell = event.request.mode === 'navigate'
+    || event.request.url.endsWith('/index.html')
+    || event.request.url.endsWith('/');
+  if (isHtmlShell) {
+    event.respondWith(
+      fetch(event.request).then(response => {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        return response;
+      }).catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html')))
+    );
     return;
   }
 
+  // Demais arquivos (ícones, manifest): cache-first, como antes.
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Salva no cache se for bem sucedido
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Fallback para cache quando offline
-        return caches.match(event.request).then(cached => {
-          return cached || caches.match('/index.html');
-        });
-      })
+    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
+      const copy = response.clone();
+      caches.open(CACHE).then(cache => cache.put(event.request, copy));
+      return response;
+    }).catch(() => caches.match('./index.html')))
   );
 });
