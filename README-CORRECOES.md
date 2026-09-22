@@ -17,7 +17,7 @@
 - `GROQ_API_KEY`
 - `STRIPE_SECRET_KEY`
 - `PRO_TOKEN_SECRET`
-- configurar o Payment Link de produção no `index.html` no lugar de `__STRIPE_PAYMENT_LINK__` antes de publicar o checkout.
+- configurar o Payment Link de produção no `index.html` no lugar de `https://buy.stripe.com/14A6oIafk4H4ez8boz4wM00` antes de publicar o checkout.
 
 ## Observação
 

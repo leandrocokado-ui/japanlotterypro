@@ -688,7 +688,7 @@ function startPro(){
   if(typeof gtag!=='undefined')gtag('event','pro_checkout_click',{currency:'JPY',value:600});
   // ⚠️ IMPORTANTE: troque pelo link de PRODUÇÃO do Stripe (Payment Link ou Checkout Session)
   // assim que a verificação da conta terminar. Nunca deixe um link "test_..." em produção.
-  const STRIPE_URL='__STRIPE_PAYMENT_LINK__';
+  const STRIPE_URL='https://buy.stripe.com/14A6oIafk4H4ez8boz4wM00';
   if(STRIPE_URL.includes('__')){showToast('⚠️ Stripe ainda não foi configurado em produção.');return;}
   window.open(STRIPE_URL,'_blank');
   document.getElementById('pro-modal').classList.remove('show');
